@@ -3,7 +3,7 @@
 ## 1. Functional Requirements(What system must do)
 ### (i)For data collection and processing 
 - automatically scrape data from predefined list of gen Ai's 
-- Use NLP to automatically ectract and tag key features 
+- Use NLP to automatically extract and tag key features 
 - Shall perform sentimental analysis 
 
 ### (ii) Data storage and management 
