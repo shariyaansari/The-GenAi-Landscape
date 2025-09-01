@@ -1,0 +1,20 @@
+export type Tool = {
+  id: string;
+  name: string;
+  description: string;
+  categories: string[];
+  pricingModel: string | null;
+  popularity: number | null;
+  website?: string;
+  github?: string | null;
+  docs?: string | null;
+  keyFeatures?: string[];
+  useCases?: string[];
+  pros?: string[];
+  cons?: string[];
+  model?: string | null;
+  integrations?: string[];
+  alternatives?: { id: string; name: string }[];
+  releaseDate: string;
+  trendScore?: number;
+};
