@@ -19,6 +19,7 @@ export type Tool = {
   alternatives?: string[]; // <-- updated to match JSON
   releaseDate: string;
   trendScore: number;
+  logoUrl:string,
 };
 
 interface ToolCardProps {
