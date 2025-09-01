@@ -1,0 +1,14 @@
+# Ignore Python virtual environments
+venv/
+__pycache__/
+
+# Ignore Node.js dependencies
+frontend/node_modules/
+
+# Ignore secret files
+backend/.env
+
+# Ignore build artifacts and logs
+.DS_Store
+*.log
+*.swo
