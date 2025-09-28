@@ -21,6 +21,20 @@
 - system displays key trends and insights abt gen ai market in a dedicated section like trending tools, growth by category
 - system shall visualize the data using charts and graphs - a bar chart comparing pricing, a timeline of new tool
 
+Updating on 22 september 
+Things done 
+- Growth 
+- Scraping of all the ai tools through 3 different sources done 
+- Secure login and sign up with jwt auth 
+- Filter added category wise 
+- Tool comparator fully working 
+
+
+## things that are left to do 
+1. Search bar not working 
+2. Conditional login 
+3. Chat bot integration 
+4. Minor UI changes 
 
 
 

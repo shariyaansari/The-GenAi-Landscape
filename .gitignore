@@ -3,7 +3,8 @@ venv/
 __pycache__/
 
 # Ignore Node.js dependencies
-frontend/node_modules/
+node_modules/
+
 
 # Ignore secret files
 backend/.env

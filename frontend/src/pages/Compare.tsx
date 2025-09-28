@@ -27,6 +27,20 @@ export default function Compare() {
     });
   };
 
+  // Clear removes a tool from selection
+const clearTool = (id: string) => {
+  setSelected((prev) => prev.filter((t) => t.id !== id));
+};
+
+// Edit replaces a tool (open the search with its name prefilled)
+const editTool = (id: string) => {
+  const tool = selected.find((t) => t.id === id);
+  if (!tool) return;
+  setQuery(tool.name); // prefill search box with tool name
+  // optionally also auto-unselect it so user can pick replacement
+  setSelected((prev) => prev.filter((t) => t.id !== id));
+};
+
   return (
     <>
       <Helmet>
@@ -73,7 +87,23 @@ export default function Compare() {
               <TableRow>
                 <TableHead>Attribute</TableHead>
                 {selected.map((t) => (
-                  <TableHead key={t.id}>{t.name}</TableHead>
+                  <TableHead key={t.id} className="relative">
+                    <div className="flex items-center gap-2">
+                      <span>{t.name}</span>
+                      <button
+                        onClick={() => editTool(t.id)}
+                        className="bg-gradient-to-r from-pink-200 via-purple-200 to-blue-200 rounded-full text-black font-semibold text-sm px-2 py-1 hover:opacity-80 transition"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => clearTool(t.id)}
+                        className="bg-gradient-to-r from-pink-200 via-purple-200 to-blue-200 rounded-full text-black font-semibold text-sm px-2 py-1 hover:opacity-80 transition"
+                      >
+                        Clear
+                      </button>
+                    </div>
+                  </TableHead>
                 ))}
               </TableRow>
             </TableHeader>

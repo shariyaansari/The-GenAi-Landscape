@@ -37,9 +37,10 @@ const App = () => (
             {/* Public routes for login/signup */}
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
-            <Route index element={<Login />} />
+            
             {/* Protected layout routes */}
             <Route element={<Layout />}>
+              <Route index element={<Index />} />
               <Route path="/index" element={<Index />} />
               <Route path="tools/:id" element={<ToolDetail />} />
               <Route path="compare" element={<Compare />} />

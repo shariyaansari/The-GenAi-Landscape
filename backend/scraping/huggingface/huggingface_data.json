@@ -1,13 +1,13 @@
 [
   {
-    "name": "Spacesreach-vb/2024-ai-timelinelike463Running",
-    "id": "spacesreach-vb--2024-ai-timelinelike463running",
+    "name": "Spacesreach-vb/2024-ai-timelinelike465Running",
+    "id": "spacesreach-vb--2024-ai-timelinelike465running",
     "description": "Description not found on page.",
     "popularity": null,
     "categories": [],
     "website": "https://huggingface.co/spaces/reach-vb/2024-ai-timeline",
     "pricingModel": "Open Source",
-    "model": "Spacesreach-vb/2024-ai-timelinelike463Running",
+    "model": "Spacesreach-vb/2024-ai-timelinelike465Running",
     "github": null,
     "docs": null,
     "keyFeatures": [],
@@ -16,8 +16,8 @@
     "cons": [],
     "integrations": [],
     "alternatives": [],
-    "releaseDate": "2025-08-31",
-    "trendScore": 86
+    "releaseDate": "2025-09-28",
+    "trendScore": 77
   },
   {
     "name": "Deep RL Course",
@@ -36,8 +36,8 @@
     "cons": [],
     "integrations": [],
     "alternatives": [],
-    "releaseDate": "2025-08-31",
-    "trendScore": 73
+    "releaseDate": "2025-09-28",
+    "trendScore": 81
   },
   {
     "name": "Automatic Hallucination detection with SelfCheckGPT NLI",
@@ -56,18 +56,18 @@
     "cons": [],
     "integrations": [],
     "alternatives": [],
-    "releaseDate": "2025-08-31",
-    "trendScore": 92
+    "releaseDate": "2025-09-28",
+    "trendScore": 85
   },
   {
-    "name": "Spacesopen-llm-leaderboard/open_llm_leaderboardlike13.5kRunningonCPU Upgrade",
-    "id": "spacesopen-llm-leaderboard--open_llm_leaderboardlike13-5krunningoncpu-upgrade",
+    "name": "Spacesopen-llm-leaderboard/open_llm_leaderboardlike13.6kRunningonCPU Upgrade",
+    "id": "spacesopen-llm-leaderboard--open_llm_leaderboardlike13-6krunningoncpu-upgrade",
     "description": "Description not found on page.",
     "popularity": null,
     "categories": [],
     "website": "https://huggingface.co/spaces/HuggingFaceH4/open_llm_leaderboard",
     "pricingModel": "Open Source",
-    "model": "Spacesopen-llm-leaderboard/open_llm_leaderboardlike13.5kRunningonCPU Upgrade",
+    "model": "Spacesopen-llm-leaderboard/open_llm_leaderboardlike13.6kRunningonCPU Upgrade",
     "github": null,
     "docs": null,
     "keyFeatures": [],
@@ -76,8 +76,8 @@
     "cons": [],
     "integrations": [],
     "alternatives": [],
-    "releaseDate": "2025-08-31",
-    "trendScore": 84
+    "releaseDate": "2025-09-28",
+    "trendScore": 85
   },
   {
     "name": "Red-Teaming Large Language Models",
@@ -96,18 +96,18 @@
     "cons": [],
     "integrations": [],
     "alternatives": [],
-    "releaseDate": "2025-08-31",
-    "trendScore": 95
+    "releaseDate": "2025-09-28",
+    "trendScore": 84
   },
   {
-    "name": "Spacespharmapsychotic/CLIP-Interrogatorlike2.92kRunningonA10G",
-    "id": "spacespharmapsychotic--clip-interrogatorlike2-92krunningona10g",
+    "name": "Spacespharmapsychotic/CLIP-Interrogatorlike2.93kRunningonA10G",
+    "id": "spacespharmapsychotic--clip-interrogatorlike2-93krunningona10g",
     "description": "Description not found on page.",
     "popularity": null,
     "categories": [],
     "website": "https://huggingface.co/spaces/pharma/CLIP-Interrogator",
     "pricingModel": "Open Source",
-    "model": "Spacespharmapsychotic/CLIP-Interrogatorlike2.92kRunningonA10G",
+    "model": "Spacespharmapsychotic/CLIP-Interrogatorlike2.93kRunningonA10G",
     "github": null,
     "docs": null,
     "keyFeatures": [],
@@ -116,18 +116,18 @@
     "cons": [],
     "integrations": [],
     "alternatives": [],
-    "releaseDate": "2025-08-31",
-    "trendScore": 75
+    "releaseDate": "2025-09-28",
+    "trendScore": 83
   },
   {
-    "name": "succinctly/text2image-prompt-generatorlike302FollowSuccinctly AI10",
-    "id": "succinctly--text2image-prompt-generatorlike302followsuccinctly-ai10",
+    "name": "succinctly/text2image-prompt-generatorlike304FollowSuccinctly AI10",
+    "id": "succinctly--text2image-prompt-generatorlike304followsuccinctly-ai10",
     "description": "This is a GPT-2 model fine-tuned on thesuccinctly/midjourney-promptsdataset, which contains 250k text prompts that users issued to theMidjourneytext-to-image service over a month period. For more details on how this dataset was scraped, seeMidjourney User Prompts & Generated Images (250k).",
     "popularity": null,
     "categories": [],
     "website": "https://huggingface.co/succinctly/text2image-prompt-generator",
     "pricingModel": "Open Source",
-    "model": "succinctly/text2image-prompt-generatorlike302FollowSuccinctly AI10",
+    "model": "succinctly/text2image-prompt-generatorlike304FollowSuccinctly AI10",
     "github": null,
     "docs": null,
     "keyFeatures": [],
@@ -136,18 +136,18 @@
     "cons": [],
     "integrations": [],
     "alternatives": [],
-    "releaseDate": "2025-08-31",
-    "trendScore": 89
+    "releaseDate": "2025-09-28",
+    "trendScore": 95
   },
   {
-    "name": "Nexusflow/NexusRaven-V2-13Blike469FollowNexusflow352",
-    "id": "nexusflow--nexusraven-v2-13blike469follownexusflow352",
+    "name": "Nexusflow/NexusRaven-V2-13Blike469FollowNexusflow353",
+    "id": "nexusflow--nexusraven-v2-13blike469follownexusflow353",
     "description": "Nexusflow HF-Nexusflow Discord-NexusRaven-V2 blog post-Prompting Notebook CoLab-Leaderboard-Read-World Demo-NexusRaven-V2-13B Github",
     "popularity": null,
     "categories": [],
     "website": "https://huggingface.co/Nexusflow/NexusRaven-V2-13B",
     "pricingModel": "Open Source",
-    "model": "Nexusflow/NexusRaven-V2-13Blike469FollowNexusflow352",
+    "model": "Nexusflow/NexusRaven-V2-13Blike469FollowNexusflow353",
     "github": null,
     "docs": null,
     "keyFeatures": [],
@@ -156,8 +156,8 @@
     "cons": [],
     "integrations": [],
     "alternatives": [],
-    "releaseDate": "2025-08-31",
-    "trendScore": 89
+    "releaseDate": "2025-09-28",
+    "trendScore": 90
   },
   {
     "name": "\ud83e\ude86 Introduction to Matryoshka Embedding Models",
@@ -176,8 +176,8 @@
     "cons": [],
     "integrations": [],
     "alternatives": [],
-    "releaseDate": "2025-08-31",
-    "trendScore": 91
+    "releaseDate": "2025-09-28",
+    "trendScore": 87
   },
   {
     "name": "AgentBench: Evaluating LLMs as Agents",
@@ -196,8 +196,8 @@
     "cons": [],
     "integrations": [],
     "alternatives": [],
-    "releaseDate": "2025-08-31",
-    "trendScore": 88
+    "releaseDate": "2025-09-28",
+    "trendScore": 75
   },
   {
     "name": "Transformers",
@@ -216,18 +216,18 @@
     "cons": [],
     "integrations": [],
     "alternatives": [],
-    "releaseDate": "2025-08-31",
-    "trendScore": 94
+    "releaseDate": "2025-09-28",
+    "trendScore": 87
   },
   {
-    "name": "Spacesallenai/reward-benchlike394Running",
-    "id": "spacesallenai--reward-benchlike394running",
+    "name": "Spacesallenai/reward-benchlike399Running",
+    "id": "spacesallenai--reward-benchlike399running",
     "description": "Description not found on page.",
     "popularity": null,
     "categories": [],
     "website": "https://huggingface.co/spaces/allenai/reward-bench",
     "pricingModel": "Open Source",
-    "model": "Spacesallenai/reward-benchlike394Running",
+    "model": "Spacesallenai/reward-benchlike399Running",
     "github": null,
     "docs": null,
     "keyFeatures": [],
@@ -236,8 +236,8 @@
     "cons": [],
     "integrations": [],
     "alternatives": [],
-    "releaseDate": "2025-08-31",
-    "trendScore": 90
+    "releaseDate": "2025-09-28",
+    "trendScore": 75
   },
   {
     "name": "GPT-2 Output Detector Demo",
@@ -256,18 +256,18 @@
     "cons": [],
     "integrations": [],
     "alternatives": [],
-    "releaseDate": "2025-08-31",
-    "trendScore": 90
+    "releaseDate": "2025-09-28",
+    "trendScore": 94
   },
   {
-    "name": "SpacesHumanAIGC/OutfitAnyonelike2.72kRunning",
-    "id": "spaceshumanaigc--outfitanyonelike2-72krunning",
+    "name": "SpacesHumanAIGC/OutfitAnyonelike2.73kRunning",
+    "id": "spaceshumanaigc--outfitanyonelike2-73krunning",
     "description": "Description not found on page.",
     "popularity": null,
     "categories": [],
     "website": "https://huggingface.co/spaces/HumanAIGC/OutfitAnyone",
     "pricingModel": "Open Source",
-    "model": "SpacesHumanAIGC/OutfitAnyonelike2.72kRunning",
+    "model": "SpacesHumanAIGC/OutfitAnyonelike2.73kRunning",
     "github": null,
     "docs": null,
     "keyFeatures": [],
@@ -276,8 +276,8 @@
     "cons": [],
     "integrations": [],
     "alternatives": [],
-    "releaseDate": "2025-08-31",
-    "trendScore": 77
+    "releaseDate": "2025-09-28",
+    "trendScore": 89
   },
   {
     "name": "Spacesflax-community/dalle-minilike338Running",
@@ -296,18 +296,18 @@
     "cons": [],
     "integrations": [],
     "alternatives": [],
-    "releaseDate": "2025-08-31",
-    "trendScore": 91
+    "releaseDate": "2025-09-28",
+    "trendScore": 92
   },
   {
-    "name": "prompthero/openjourneylike3.15k",
-    "id": "prompthero--openjourneylike3-15k",
+    "name": "prompthero/openjourneylike3.16k",
+    "id": "prompthero--openjourneylike3-16k",
     "description": "Include'mdjrny-v4 style'in prompt. Here you'll find hundreds ofOpenjourney prompts",
     "popularity": null,
     "categories": [],
     "website": "https://huggingface.co/prompthero/midjourney-v4-diffusion",
     "pricingModel": "Open Source",
-    "model": "prompthero/openjourneylike3.15k",
+    "model": "prompthero/openjourneylike3.16k",
     "github": null,
     "docs": null,
     "keyFeatures": [],
@@ -316,8 +316,8 @@
     "cons": [],
     "integrations": [],
     "alternatives": [],
-    "releaseDate": "2025-08-31",
-    "trendScore": 77
+    "releaseDate": "2025-09-28",
+    "trendScore": 72
   },
   {
     "name": "Spacesfffiloni/img-to-musiclike991Build error",
@@ -336,8 +336,8 @@
     "cons": [],
     "integrations": [],
     "alternatives": [],
-    "releaseDate": "2025-08-31",
-    "trendScore": 84
+    "releaseDate": "2025-09-28",
+    "trendScore": 92
   },
   {
     "name": "Stable Diffusion concepts library",
@@ -356,8 +356,8 @@
     "cons": [],
     "integrations": [],
     "alternatives": [],
-    "releaseDate": "2025-08-31",
-    "trendScore": 78
+    "releaseDate": "2025-09-28",
+    "trendScore": 81
   },
   {
     "name": "Training Stable Diffusion with Dreambooth using \ud83e\udde8 Diffusers",
@@ -376,8 +376,8 @@
     "cons": [],
     "integrations": [],
     "alternatives": [],
-    "releaseDate": "2025-08-31",
-    "trendScore": 73
+    "releaseDate": "2025-09-28",
+    "trendScore": 88
   },
   {
     "name": "CiaraRowles/TemporalNetlike354",
@@ -396,8 +396,8 @@
     "cons": [],
     "integrations": [],
     "alternatives": [],
-    "releaseDate": "2025-08-31",
-    "trendScore": 85
+    "releaseDate": "2025-09-28",
+    "trendScore": 95
   },
   {
     "name": "Spacesvideo-p2p-library/Video-P2P-Demolike22Runtime error",
@@ -416,8 +416,8 @@
     "cons": [],
     "integrations": [],
     "alternatives": [],
-    "releaseDate": "2025-08-31",
-    "trendScore": 75
+    "releaseDate": "2025-09-28",
+    "trendScore": 90
   },
   {
     "name": "SpacesPAIR/Text2Video-Zerolike378Runtime error",
@@ -436,8 +436,8 @@
     "cons": [],
     "integrations": [],
     "alternatives": [],
-    "releaseDate": "2025-08-31",
-    "trendScore": 75
+    "releaseDate": "2025-09-28",
+    "trendScore": 79
   },
   {
     "name": "Spacesali-vilab/modelscope-text-to-video-synthesislike1.46kRuntime error",
@@ -456,8 +456,8 @@
     "cons": [],
     "integrations": [],
     "alternatives": [],
-    "releaseDate": "2025-08-31",
-    "trendScore": 70
+    "releaseDate": "2025-09-28",
+    "trendScore": 76
   },
   {
     "name": "Spacesdeclare-lab/mustangolike167Build error",
@@ -476,18 +476,18 @@
     "cons": [],
     "integrations": [],
     "alternatives": [],
-    "releaseDate": "2025-08-31",
-    "trendScore": 81
+    "releaseDate": "2025-09-28",
+    "trendScore": 86
   },
   {
-    "name": "SpacesDuplicated frommusicgen/MusicGenfacebook/MusicGenlike5.06kRuntime error",
-    "id": "spacesduplicated-frommusicgen--musicgenfacebook--musicgenlike5-06kruntime-error",
+    "name": "SpacesDuplicated frommusicgen/MusicGenfacebook/MusicGenlike5.07kRuntime error",
+    "id": "spacesduplicated-frommusicgen--musicgenfacebook--musicgenlike5-07kruntime-error",
     "description": "Description not found on page.",
     "popularity": null,
     "categories": [],
     "website": "https://huggingface.co/spaces/facebook/MusicGen",
     "pricingModel": "Open Source",
-    "model": "SpacesDuplicated frommusicgen/MusicGenfacebook/MusicGenlike5.06kRuntime error",
+    "model": "SpacesDuplicated frommusicgen/MusicGenfacebook/MusicGenlike5.07kRuntime error",
     "github": null,
     "docs": null,
     "keyFeatures": [],
@@ -496,8 +496,8 @@
     "cons": [],
     "integrations": [],
     "alternatives": [],
-    "releaseDate": "2025-08-31",
-    "trendScore": 89
+    "releaseDate": "2025-09-28",
+    "trendScore": 95
   },
   {
     "name": "Spacesharmonai/dance-diffusionlike112Runtime error",
@@ -516,8 +516,8 @@
     "cons": [],
     "integrations": [],
     "alternatives": [],
-    "releaseDate": "2025-08-31",
-    "trendScore": 81
+    "releaseDate": "2025-09-28",
+    "trendScore": 86
   },
   {
     "name": "AI for Game Development: Creating a Farming Game in 5 Days. Part 1",
@@ -536,8 +536,8 @@
     "cons": [],
     "integrations": [],
     "alternatives": [],
-    "releaseDate": "2025-08-31",
-    "trendScore": 79
+    "releaseDate": "2025-09-28",
+    "trendScore": 71
   },
   {
     "name": "NExT-Chat: An LMM for Chat, Detection and Segmentation",
@@ -556,7 +556,7 @@
     "cons": [],
     "integrations": [],
     "alternatives": [],
-    "releaseDate": "2025-08-31",
-    "trendScore": 73
+    "releaseDate": "2025-09-28",
+    "trendScore": 92
   }
 ]
