@@ -21,10 +21,10 @@ export default function Signup() {
     }
 
     try {
-      await axios.post("http://localhost:5000/signup", {
+      await axios.post("http://localhost:8000/signup", {
         email,
         password,
-        confirm_password: confirmPassword,
+        
       });
       setMessage("Signup successful! Redirecting to login...");
       setColor("green");

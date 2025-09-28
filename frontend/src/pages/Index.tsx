@@ -87,7 +87,7 @@ const Index = () => {
             </div>
           </div>
         </section>
-
+m
         <section className="space-y-4">
           <h2 className="text-xl font-semibold">Insights & Trends</h2>
           <InsightsSection />

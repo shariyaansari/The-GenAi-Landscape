@@ -1,34 +1,73 @@
+import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Sparkles, TrendingUp, Layers } from "lucide-react";
-import { tools } from "@/data/tools";
+import type { Tool } from "@/data/tools";
 
-function getTopTrending() {
+function getTopTrending(tools: Tool[]) {
+  if (tools.length === 0) return { name: "N/A", trendScore: 0 };
   return tools.reduce((max, t) => (t.trendScore > max.trendScore ? t : max), tools[0]);
 }
 
-function getFastestGrowthCategory() {
+function getFastestGrowthCategory(tools: Tool[]) {
   const map = new Map<string, { total: number; count: number }>();
-  tools.forEach((t) => {
-    const entry = map.get(t.category) || { total: 0, count: 0 };
-    entry.total += t.trendScore;
-    entry.count += 1;
-    map.set(t.category, entry);
+
+  tools.forEach((tool) => {
+    tool.categories.forEach((category) => {
+      const entry = map.get(category) || { total: 0, count: 0 };
+      entry.total += tool.trendScore;
+      entry.count += 1;
+      map.set(category, entry);
+    });
   });
+
   let best = "";
   let bestAvg = -Infinity;
-  map.forEach((v, k) => {
-    const avg = v.total / v.count;
+
+  map.forEach((value, key) => {
+    const avg = value.total / value.count;
     if (avg > bestAvg) {
       bestAvg = avg;
-      best = k;
+      best = key;
     }
   });
+
   return { category: best, avg: Math.round(bestAvg) };
 }
 
 export default function HeroKpis() {
-  const top = getTopTrending();
-  const growth = getFastestGrowthCategory();
+  const [tools, setTools] = useState<Tool[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch("http://localhost:8000/api/tools")
+      .then((res) => res.json())
+      .then((data) => {
+        setTools(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Failed to fetch tools:", err);
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading || tools.length === 0) {
+    return (
+      <section className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <Card className="glass">
+          <CardHeader>
+            <CardTitle className="text-sm text-muted-foreground">Loading KPIs...</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-muted-foreground">Fetching tool data from the server.</p>
+          </CardContent>
+        </Card>
+      </section>
+    );
+  }
+
+  const top = getTopTrending(tools);
+  const growth = getFastestGrowthCategory(tools);
   const total = tools.length;
 
   return (
@@ -74,7 +113,10 @@ export default function HeroKpis() {
           <CardTitle className="text-sm text-muted-foreground">AI Recommendation</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-sm">Explore <span className="font-medium">{top.name}</span> and similar tools in {growth.category} for fastest ROI.</p>
+          <p className="text-sm">
+            Explore <span className="font-medium">{top.name}</span> and similar tools in{" "}
+            {growth.category} for fastest ROI.
+          </p>
         </CardContent>
       </Card>
     </section>
