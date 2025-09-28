@@ -13,17 +13,25 @@ export default function Login() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:5000/login", { email, password });
-      localStorage.setItem("token", res.data.token);
+      const formData = new URLSearchParams();
+      formData.append("username", email); // FastAPI expects 'username'
+      formData.append("password", password);
+
+      const res = await axios.post("http://localhost:8000/token", formData, {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      });
+
+      localStorage.setItem("token", res.data.access_token);
       setMessage("Login successful!");
       setColor("green");
 
-      // Redirect to home after successful login
       setTimeout(() => {
-        navigate("/index"); 
-      }, 1000); // optional delay so user sees the message
+        navigate("/index");
+      }, 1000);
     } catch (err: any) {
-      setMessage(err.response?.data?.error || "Login failed");
+      setMessage(err.response?.data?.detail || "Login failed");
       setColor("red");
     }
   };
