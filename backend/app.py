@@ -292,27 +292,17 @@ def get_latest():
 
 
 @app.post("/api/consultant")
-async def get_project_recommendation(query: ConsultantQuery):
-    if client is None:
-        raise HTTPException(status_code=500, detail="Database connection not configured.")
-    if gemini_model is None:
-        raise HTTPException(status_code=500, detail="Generative model not configured.")
+async def get_project_recommendation(query: ConsultantQuery, current_user: dict = Depends(get_current_user)):
+    if not all([client, users_collection, gemini_model, embedding_model]):
+        raise HTTPException(status_code=503, detail="A backend service is not available.")
 
     try:
         # 1. RETRIEVAL
-        print(f"Received query: {query.prompt}")
+        print(f"Received query from {current_user['email']}: {query.prompt}")
         query_embedding = embedding_model.encode(query.prompt).tolist()
 
         search_pipeline = [
-            {
-                "$vectorSearch": {
-                    "index": "vector_index",
-                    "path": "description_embedding",
-                    "queryVector": query_embedding,
-                    "numCandidates": 100,
-                    "limit": 5
-                }
-            },
+            {"$vectorSearch": {"index": "vector_index", "path": "description_embedding", "queryVector": query_embedding, "numCandidates": 100, "limit": 5}},
             {"$project": {"name": 1, "description": 1, "website": 1, "categories": 1, "_id": 0}}
         ]
         
@@ -323,32 +313,55 @@ async def get_project_recommendation(query: ConsultantQuery):
             return {"recommendation": "I couldn't find any specific tools matching your request in the database."}
 
         # 2. AUGMENTATION
-        context = "Based on a user's project idea, here is a list of relevant tools found in our database:\n\n"
+        context = "Relevant tools from our database:\n\n"
         for tool in retrieved_tools:
             context += f"- Tool: {tool.get('name')}\n  Description: {tool.get('description')}\n  Categories: {', '.join(tool.get('categories', []))}\n\n"
 
         # 3. GENERATION
         final_prompt = (
-            "You are an expert AI project consultant. A user wants to build a project. "
-            f"Their idea is: '{query.prompt}'.\n\n"
-            "Using ONLY the information from the context below, recommend a stack of 1-3 tools that would be best for this project. "
+            "You are an expert AI project consultant. A user wants to build: "
+            f"'{query.prompt}'.\n\n"
+            "Using ONLY the information from the context below, recommend a stack of 1-3 tools. "
             "Explain WHY each tool is a good choice for their specific need. "
-            "Format your response in simple markdown. Do not mention the database or the context in your response.\n\n"
+            "Format your response in simple markdown. Do not mention the database or the context.\n\n"
             f"Context:\n{context}"
         )
         
         print("Generating recommendation with Gemini...")
         response = gemini_model.generate_content(final_prompt)
-        
-        return {"recommendation": response.text}
+        recommendation_text = response.text
+
+        # Save conversation to user's history
+        conversation_entry = {
+            "prompt": query.prompt,
+            "recommendation": recommendation_text,
+            "timestamp": datetime.utcnow()
+        }
+        users_collection.update_one(
+            {"email": current_user["email"]},
+            {"$push": {"consultant_history": conversation_entry}}
+        )
+
+        return {"recommendation": recommendation_text}
 
     except Exception as e:
         print(f"An error occurred in the consultant endpoint: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
-    except Exception as e:
-        print(f"An error occurred in the consultant endpoint: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+
+# --- NEW: Endpoint to fetch a user's conversation history ---
+@app.get("/api/consultant/history")
+async def get_consultant_history(current_user: dict = Depends(get_current_user)):
+    if users_collection is None:
+        raise HTTPException(status_code=500, detail="Database connection not configured.")
+
+    # The user object from get_current_user already contains the history
+    history = current_user.get("consultant_history", [])
+    
+    # Sort history by timestamp, newest first
+    sorted_history = sorted(history, key=lambda x: x['timestamp'], reverse=True)
+
+    return sorted_history
 
 # --- NEW: Add this block at the very end of the file ---
 if __name__ == "__main__":

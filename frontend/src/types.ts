@@ -18,3 +18,9 @@ export type Tool = {
   releaseDate: string;
   trendScore?: number;
 };
+
+export type Conversation = {
+  prompt: string;
+  recommendation: string;
+  timestamp: string;
+};
