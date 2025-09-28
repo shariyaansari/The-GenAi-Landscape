@@ -1,12 +1,16 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import ToolCard from "@/components/ToolCard";
 import SearchFilterBar, { FilterState } from "@/components/SearchFilterBar";
 import InsightsSection from "@/components/InsightsSection";
 import HeroKpis from "@/components/HeroKpis";
 import allTools from "@/data/tools.json";
+import Chatbot from "@/components/Chatbot"; // Import the Chatbot
+import { Tool } from "@/types";
+
 
 const Index = () => {
+  const [allTools, setAllTools] = useState<Tool[]>([]); // Typed state
   const [filters, setFilters] = useState<FilterState>({
     search: "",
     category: "all",
@@ -39,6 +43,22 @@ const Index = () => {
     });
   }, [filters]);
 
+  useEffect(() => {
+    const fetchTools = async () => {
+      try {
+        // Correct URL for default FastAPI server
+        const response = await fetch("http://127.0.0.1:8000/api/tools");
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data: Tool[] = await response.json(); // Type the response data
+        setAllTools(data);
+      } catch (error) {
+        console.error("Failed to fetch tools:", error);
+      }
+    };
+    fetchTools();
+  }, []);
   const latest = useMemo(
     () =>
       [...filtered].sort(
@@ -93,6 +113,7 @@ m
           <InsightsSection />
         </section>
       </main>
+      <Chatbot /> {/* Render the Chatbot component */}
     </>
   );
 };

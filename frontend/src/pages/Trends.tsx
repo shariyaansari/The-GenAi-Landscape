@@ -1,6 +1,7 @@
 import { Helmet } from "react-helmet-async";
 import ToolCard from "@/components/ToolCard";
 import { tools } from "@/data/tools"; 
+import Chatbot from "@/components/Chatbot";
 
 function isEmerging(t: any) {
   const monthsSince =
@@ -44,6 +45,7 @@ export default function Trends() {
           </div>
         </section>
       </main>
+      <Chatbot/>
     </>
   );
 }

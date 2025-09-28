@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Calendar, TrendingUp, Globe, Github, BookOpen } from "lucide-react";
 // import { getToolById } from "@/data/tools";
 import { useEffect, useState } from "react";
+import Chatbot from "@/components/Chatbot";
 
 const API = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
@@ -78,6 +79,7 @@ export default function ToolDetail() {
           <Button>Back to Tools</Button>
         </Link>
       </div>
+	  <Chatbot/>
     </main>
   );
 }

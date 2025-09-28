@@ -1,5 +1,6 @@
 import { Helmet } from "react-helmet-async";
 import InsightsSection from "@/components/InsightsSection";
+import Chatbot from "@/components/Chatbot";
 
 export default function Insights() {
   return (
@@ -18,6 +19,7 @@ export default function Insights() {
 
         <InsightsSection />
       </main>
+      <Chatbot/>
     </>
   );
 }

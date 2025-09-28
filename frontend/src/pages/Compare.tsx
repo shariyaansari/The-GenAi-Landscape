@@ -3,6 +3,7 @@ import { Helmet } from "react-helmet-async";
 import { tools as allTools, Tool } from "@/data/tools";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import Chatbot from "@/components/Chatbot";
 
 export default function Compare() {
   const [query, setQuery] = useState("");
@@ -148,6 +149,7 @@ const editTool = (id: string) => {
           </Table>
         </section>
       </main>
+      <Chatbot/>
     </>
   );
 }

@@ -9,6 +9,21 @@ from jose import JWTError, jwt
 from datetime import datetime, timedelta
 from pydantic import BaseModel
 from typing import List, Optional
+from pydantic import BaseModel
+
+STOP_WORDS = {
+    "i", "me", "my", "myself", "we", "our", "ours", "ourselves", "you", "your", 
+    "he", "him", "his", "she", "her", "it", "its", "they", "them", "their", 
+    "what", "which", "who", "whom", "this", "that", "these", "those", "am", 
+    "is", "are", "was", "were", "be", "been", "being", "have", "has", "had", 
+    "do", "does", "did", "a", "an", "the", "and", "but", "if", "or", "because", 
+    "as", "until", "while", "of", "at", "by", "for", "with", "about", "to", 
+    "from", "in", "out", "on", "off", "over", "under", "again", "further", 
+    "then", "once", "here", "there", "when", "where", "why", "how", "all", 
+    "any", "both", "each", "few", "more", "most", "other", "some", "such", 
+    "no", "nor", "not", "only", "own", "same", "so", "than", "too", "very", 
+    "can", "will", "just", "don", "should", "now", "find", "show", "give", "me"
+}
 
 # --- Load Environment Variables ---
 load_dotenv()
@@ -19,6 +34,11 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 # --- App Initialization ---
 app = FastAPI()
+origins = [
+    "http://localhost:8080",  # Your React app's address
+    # Add other origins if necessary
+]
+
 
 # --- CORS Middleware ---
 app.add_middleware(
@@ -28,6 +48,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 # --- Database Connection ---
 try:
@@ -105,6 +126,13 @@ def read_root():
     return {"message": "Welcome to the Gen AI Landscape API"}
 
 # --- Tools Endpoint (Existing) ---
+class ChatRequest(BaseModel):
+    message: str
+
+# Define the response structure
+class ChatResponse(BaseModel):
+    reply: str
+
 @app.get("/api/tools")
 def get_all_tools():
     if tools_collection is None:
@@ -116,6 +144,74 @@ def get_all_tools():
         return tools
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+def tool_helper(tool) -> dict:
+    return {
+        "id": str(tool["_id"]),
+        "name": tool.get("name"),
+        # "description": tool.get("description"),
+        "pricingModel": tool.get("pricingModel"),
+        "website":tool.get("website"),
+        # Add other fields you might need
+    }
+
+
+# ---  CHATBOT ENDPOINT ---
+@app.post("/api/chatbot", response_model=ChatResponse)
+async def handle_chat(request: ChatRequest):
+    """
+    Finds matching tools, sorts by popularity, and returns a detailed
+    response with name, release date, pricing, and website link.
+    """
+    if tools_collection is None:
+        return {"reply": "Sorry, I can't connect to the database right now."}
+
+    user_message = request.message.lower()
+    keywords = user_message.split()
+    meaningful_keywords = [word for word in keywords if word.strip() not in STOP_WORDS]
+
+    if not meaningful_keywords:
+        return {"reply": "Please be a bit more specific about what you're looking for."}
+
+    query = {
+        "$or": [
+            {"name": {"$regex": "|".join(meaningful_keywords), "$options": "i"}},
+            {"description": {"$regex": "|".join(meaningful_keywords), "$options": "i"}},
+            {"keyFeatures": {"$regex": "|".join(meaningful_keywords), "$options": "i"}}
+        ]
+    }
+
+    try:
+        found_tools = list(tools_collection.find(query).sort("popularity", -1).limit(3))
+
+        if not found_tools:
+            return {"reply": f"Sorry, I couldn't find any tools related to your search. Try describing it differently."}
+
+        response_text = "Here are the top 3 most popular tools I found for you:\n\n---\n\n"
+        
+        # ---  RESPONSE FORMATTING LOGIC ---
+        for tool in found_tools:
+            # Safely get each piece of data, providing a default if it's missing
+            name = tool.get('name', 'N/A')
+            release_date = tool.get('releaseDate', 'N/A')
+            pricing_model = tool.get('pricingModel', 'N/A')
+            website_link = tool.get('website', '#')
+            description = tool.get('description', 'No description available.')
+            
+            # Create a more detailed, formatted string for each tool
+            response_text += (
+                f"**Name**: {name}\n"
+                f"- **Release Date**: {release_date}\n"
+                f"- **Pricing**: {pricing_model.title()}\n"
+                f"- **Website**: [{website_link}]({website_link})\n\n"
+            )
+
+        return {"reply": response_text}
+
+    except Exception as e:
+        print(f"Database query failed: {e}")
+        return {"reply": "Sorry, something went wrong while searching for tools."}
+
 
 # --- NEW: Signup Endpoint ---
 @app.post("/signup", status_code=status.HTTP_201_CREATED)
@@ -160,6 +256,17 @@ def read_users_me(current_user: dict = Depends(get_current_user)):
     current_user.pop('_id', None)
     current_user.pop('hashed_password', None) # Don't send the hash back
     return current_user
+
+@app.get("/tools/popular")
+def get_popular():
+    tools = list(tools_collection.find({}, {'_id': 0}))
+    return list(tools.find().sort("popularity", -1).limit(10))
+
+# Latest (based on trendScore instead of releaseDate)
+@app.get("/tools/latest")
+def get_latest():
+    tools = list(tools_collection.find({}, {'_id': 0}))
+    return list(tools.find().sort("trendScore", -1).limit(10))
 
 # --- NEW: Add this block at the very end of the file ---
 if __name__ == "__main__":
