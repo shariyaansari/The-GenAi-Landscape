@@ -14,6 +14,7 @@ import Trends from "./pages/Trends";
 import Insights from "./pages/Insights";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import Consultant from "./pages/Consultant";
 
 const queryClient = new QueryClient();
 
@@ -46,6 +47,7 @@ const App = () => (
               <Route path="compare" element={<Compare />} />
               <Route path="trends" element={<Trends />} />
               <Route path="insights" element={<Insights />} />
+               <Route path="consultant" element={<Consultant />} />
               <Route path="*" element={<NotFound />} />
             </Route>
 

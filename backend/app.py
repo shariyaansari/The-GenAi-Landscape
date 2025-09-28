@@ -10,6 +10,10 @@ from datetime import datetime, timedelta
 from pydantic import BaseModel
 from typing import List, Optional
 from pydantic import BaseModel
+from sentence_transformers import SentenceTransformer
+import google.generativeai as genai
+
+
 
 STOP_WORDS = {
     "i", "me", "my", "myself", "we", "our", "ours", "ourselves", "you", "your", 
@@ -28,15 +32,15 @@ STOP_WORDS = {
 # --- Load Environment Variables ---
 load_dotenv()
 mongo_uri = os.getenv("MONGO_URI")
-SECRET_KEY = os.getenv("SECRET_KEY", "a_default_secret_key") # Load or use a default
+SECRET_KEY = os.getenv("SECRET_KEY", "a_default_secret_key")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
+GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 
 # --- App Initialization ---
 app = FastAPI()
 origins = [
-    "http://localhost:8080",  # Your React app's address
-    # Add other origins if necessary
+    "http://localhost:8080", 
 ]
 
 
@@ -63,6 +67,21 @@ except Exception as e:
     client = None
     tools_collection = None
     users_collection = None
+    
+# Load the embedding model once when the server starts for efficiency
+embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
+print("✅ SentenceTransformer model loaded.")
+
+if GOOGLE_API_KEY:
+    genai.configure(api_key=GOOGLE_API_KEY)
+    # --- THIS IS THE FIX ---
+    # We are updating the model name to a current, powerful version.
+    gemini_model = genai.GenerativeModel('gemini-2.5-flash-preview-05-20')
+    print("✅ Gemini client configured.")
+else:
+    gemini_model = None
+    print("⚠️ WARNING: GOOGLE_API_KEY not found. AI Consultant will not work.")
+
 
 # --- Security & Hashing Setup ---
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -99,6 +118,9 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
+
+class ConsultantQuery(BaseModel):
+    prompt: str
 
 async def get_current_user(token: str = Depends(oauth2_scheme)):
     credentials_exception = HTTPException(
@@ -267,6 +289,66 @@ def get_popular():
 def get_latest():
     tools = list(tools_collection.find({}, {'_id': 0}))
     return list(tools.find().sort("trendScore", -1).limit(10))
+
+
+@app.post("/api/consultant")
+async def get_project_recommendation(query: ConsultantQuery):
+    if client is None:
+        raise HTTPException(status_code=500, detail="Database connection not configured.")
+    if gemini_model is None:
+        raise HTTPException(status_code=500, detail="Generative model not configured.")
+
+    try:
+        # 1. RETRIEVAL
+        print(f"Received query: {query.prompt}")
+        query_embedding = embedding_model.encode(query.prompt).tolist()
+
+        search_pipeline = [
+            {
+                "$vectorSearch": {
+                    "index": "vector_index",
+                    "path": "description_embedding",
+                    "queryVector": query_embedding,
+                    "numCandidates": 100,
+                    "limit": 5
+                }
+            },
+            {"$project": {"name": 1, "description": 1, "website": 1, "categories": 1, "_id": 0}}
+        ]
+        
+        retrieved_tools = list(tools_collection.aggregate(search_pipeline))
+        print(f"Found {len(retrieved_tools)} relevant tools.")
+
+        if not retrieved_tools:
+            return {"recommendation": "I couldn't find any specific tools matching your request in the database."}
+
+        # 2. AUGMENTATION
+        context = "Based on a user's project idea, here is a list of relevant tools found in our database:\n\n"
+        for tool in retrieved_tools:
+            context += f"- Tool: {tool.get('name')}\n  Description: {tool.get('description')}\n  Categories: {', '.join(tool.get('categories', []))}\n\n"
+
+        # 3. GENERATION
+        final_prompt = (
+            "You are an expert AI project consultant. A user wants to build a project. "
+            f"Their idea is: '{query.prompt}'.\n\n"
+            "Using ONLY the information from the context below, recommend a stack of 1-3 tools that would be best for this project. "
+            "Explain WHY each tool is a good choice for their specific need. "
+            "Format your response in simple markdown. Do not mention the database or the context in your response.\n\n"
+            f"Context:\n{context}"
+        )
+        
+        print("Generating recommendation with Gemini...")
+        response = gemini_model.generate_content(final_prompt)
+        
+        return {"recommendation": response.text}
+
+    except Exception as e:
+        print(f"An error occurred in the consultant endpoint: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+    except Exception as e:
+        print(f"An error occurred in the consultant endpoint: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
 
 # --- NEW: Add this block at the very end of the file ---
 if __name__ == "__main__":
