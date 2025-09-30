@@ -4,7 +4,7 @@ import { Sparkles, TrendingUp, Layers } from "lucide-react";
 import type { Tool } from "@/data/tools";
 
 function getTopTrending(tools: Tool[]) {
-  if (tools.length === 0) return { name: "N/A", trendScore: 0 };
+  if (!Array.isArray(tools) || tools.length === 0) return { name: "N/A", trendScore: 0 };
   return tools.reduce((max, t) => (t.trendScore > max.trendScore ? t : max), tools[0]);
 }
 
@@ -12,9 +12,10 @@ function getFastestGrowthCategory(tools: Tool[]) {
   const map = new Map<string, { total: number; count: number }>();
 
   tools.forEach((tool) => {
+    if (!Array.isArray(tool.categories)) return;
     tool.categories.forEach((category) => {
       const entry = map.get(category) || { total: 0, count: 0 };
-      entry.total += tool.trendScore;
+      entry.total += typeof tool.trendScore === "number" ? tool.trendScore : 0;
       entry.count += 1;
       map.set(category, entry);
     });
@@ -31,7 +32,7 @@ function getFastestGrowthCategory(tools: Tool[]) {
     }
   });
 
-  return { category: best, avg: Math.round(bestAvg) };
+  return { category: best || "N/A", avg: Math.round(bestAvg) || 0 };
 }
 
 export default function HeroKpis() {
@@ -42,7 +43,19 @@ export default function HeroKpis() {
     fetch("http://localhost:8000/api/tools")
       .then((res) => res.json())
       .then((data) => {
-        setTools(data);
+        const cleaned = Array.isArray(data)
+          ? data.map((tool) => ({
+              ...tool,
+              useCases: Array.isArray(tool.useCases)
+                ? tool.useCases
+                : typeof tool.useCases === "string"
+                ? [tool.useCases]
+                : [],
+              trendScore: typeof tool.trendScore === "number" ? tool.trendScore : 0,
+              categories: Array.isArray(tool.categories) ? tool.categories : [],
+            }))
+          : [];
+        setTools(cleaned);
         setLoading(false);
       })
       .catch((err) => {

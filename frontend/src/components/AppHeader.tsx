@@ -1,5 +1,5 @@
-import { NavLink } from "react-router-dom";
-// 1. Import the necessary icons, including a new one for the Consultant
+import { NavLink, useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth"; // <-- Import your auth context
 import { Sparkles, LineChart, GitCompareArrows, Lightbulb, LayoutDashboard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -12,6 +12,16 @@ const navLinkCls = ({ isActive }: { isActive: boolean }) =>
 
 
 export const AppHeader = () => {
+  const { isLoggedIn, logout } = useAuth(); // <-- Get auth state and logout
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    localStorage.removeItem("token");
+    sessionStorage.removeItem("isLoggedIn");
+    navigate("/login");
+  };
+
   return (
     <header className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur-md">
       <div className="container mx-auto flex h-14 items-center justify-between px-4">
@@ -45,6 +55,15 @@ export const AppHeader = () => {
         </nav>
 
         <div className="flex items-center gap-2">
+          {isLoggedIn ? (
+            <Button variant="secondary" size="sm" onClick={handleLogout}>
+              Logout
+            </Button>
+          ) : (
+            <NavLink to="/login">
+              <Button variant="secondary" size="sm">Login</Button>
+            </NavLink>
+          )}
           <NavLink to="/trends">
             <Button variant="secondary" size="sm">Discover</Button>
           </NavLink>
