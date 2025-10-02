@@ -142,10 +142,11 @@ const Index = () => {
         "";
       const toolPricingCategory = detectPricingCategory(rawPricing);
 
+      console.log("Tool:", t.name, "RawPricing:", rawPricing, "DetectedCategory:", toolPricingCategory, "SelectedPricing:", selPricing);
+
       const pricingMatch =
         selPricing === "all" ||
         (selPricing && toolPricingCategory === selPricing) ||
-        // fallback: if toolPricingCategory includes word (ex: 'free trial' => freemium)
         (selPricing === "freemium" &&
           rawPricing.includes("trial") &&
           rawPricing.includes("free"));

@@ -9,9 +9,11 @@ export type FilterState = {
 type Props = {
   value: FilterState;
   onChange: (next: FilterState) => void;
+  categories: string[];
+  pricingOptions: string[];
 };
 
-const SearchFilterBar: React.FC<Props> = ({ value, onChange }) => {
+const SearchFilterBar: React.FC<Props> = ({ value, onChange, categories, pricingOptions }) => {
   const [local, setLocal] = useState<FilterState>(value);
 
   // keep local in sync when parent changes filters (e.g. reset from elsewhere)
@@ -19,7 +21,10 @@ const SearchFilterBar: React.FC<Props> = ({ value, onChange }) => {
     setLocal(value);
   }, [value]);
 
-  const handleApply = () => onChange(local);
+  const handleApply = () => {
+    console.log("Search:", local.search, "Category:", local.category, "Pricing:", local.pricing); // <-- Added log
+    onChange(local);
+  };
 
   const handleClear = () => {
     const cleared: FilterState = { search: "", category: "all", pricing: "all" };
@@ -49,11 +54,11 @@ const SearchFilterBar: React.FC<Props> = ({ value, onChange }) => {
           aria-label="Category"
         >
           <option value="all">All categories</option>
-          <option value="image">Image</option>
-          <option value="text">Text</option>
-          <option value="code">Code</option>
-          <option value="audio">Audio</option>
-          <option value="analytics">Analytics</option>
+          {categories.map((category) => (
+            <option key={category} value={category}>
+              {category}
+            </option>
+          ))}
         </select>
 
         <select
@@ -63,9 +68,11 @@ const SearchFilterBar: React.FC<Props> = ({ value, onChange }) => {
           aria-label="Pricing"
         >
           <option value="all">All pricing</option>
-          <option value="free">Free</option>
-          <option value="freemium">Freemium</option>
-          <option value="paid">Paid</option>
+          {pricingOptions.map((option) => (
+            <option key={option} value={option}>
+              {option}
+            </option>
+          ))}
         </select>
 
         <div className="flex gap-2">
