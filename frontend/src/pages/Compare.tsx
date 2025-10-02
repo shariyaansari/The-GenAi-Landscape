@@ -1,11 +1,22 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { tools as allTools, Tool } from "@/data/tools";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import Chatbot from "@/components/Chatbot";
+import { useAuth } from "@/hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
 export default function Compare() {
+  const { isLoggedIn } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      navigate("/login");
+    }
+  }, [isLoggedIn, navigate]);
+
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState<Tool[]>([]);
 
@@ -29,18 +40,18 @@ export default function Compare() {
   };
 
   // Clear removes a tool from selection
-const clearTool = (id: string) => {
-  setSelected((prev) => prev.filter((t) => t.id !== id));
-};
+  const clearTool = (id: string) => {
+    setSelected((prev) => prev.filter((t) => t.id !== id));
+  };
 
-// Edit replaces a tool (open the search with its name prefilled)
-const editTool = (id: string) => {
-  const tool = selected.find((t) => t.id === id);
-  if (!tool) return;
-  setQuery(tool.name); // prefill search box with tool name
-  // optionally also auto-unselect it so user can pick replacement
-  setSelected((prev) => prev.filter((t) => t.id !== id));
-};
+  // Edit replaces a tool (open the search with its name prefilled)
+  const editTool = (id: string) => {
+    const tool = selected.find((t) => t.id === id);
+    if (!tool) return;
+    setQuery(tool.name); // prefill search box with tool name
+    // optionally also auto-unselect it so user can pick replacement
+    setSelected((prev) => prev.filter((t) => t.id !== id));
+  };
 
   return (
     <>
@@ -149,7 +160,7 @@ const editTool = (id: string) => {
           </Table>
         </section>
       </main>
-      <Chatbot/>
+      <Chatbot />
     </>
   );
 }

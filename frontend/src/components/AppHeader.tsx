@@ -19,7 +19,7 @@ export const AppHeader = () => {
     logout();
     localStorage.removeItem("token");
     sessionStorage.removeItem("isLoggedIn");
-    navigate("/login");
+    navigate("/"); // Navigate to dashboard/home after logout
   };
 
   return (

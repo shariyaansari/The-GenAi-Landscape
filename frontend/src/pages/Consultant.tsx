@@ -5,8 +5,19 @@ import { Textarea } from '@/components/ui/textarea';
 import { Send, Sparkles, Loader2, History, ChevronDown, ChevronUp } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import { Conversation } from '@/types';
+import { useAuth } from '@/hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
 
 export default function Consultant() {
+  const { isLoggedIn } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      navigate("/login");
+    }
+  }, [isLoggedIn, navigate]);
+
   const [prompt, setPrompt] = useState('');
   // Simplified state: we only need to manage the history array.
   const [history, setHistory] = useState<Conversation[]>([]);
