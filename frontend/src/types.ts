@@ -2,13 +2,13 @@ export type Tool = {
   id: string;
   name: string;
   description: string;
+  keyFeatures: string[];
   categories: string[];
-  pricingModel: string | null;
+  pricingModel: "free" | "freemium" | "paid" | string;
   popularity: number | null;
   website?: string;
   github?: string | null;
   docs?: string | null;
-  keyFeatures?: string[];
   useCases?: string[];
   pros?: string[];
   cons?: string[];
@@ -17,6 +17,7 @@ export type Tool = {
   alternatives?: { id: string; name: string }[];
   releaseDate: string;
   trendScore?: number;
+  [key: string]: any;
 };
 
 export type Conversation = {

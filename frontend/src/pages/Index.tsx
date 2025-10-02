@@ -4,13 +4,36 @@ import ToolCard from "@/components/ToolCard";
 import SearchFilterBar, { FilterState } from "@/components/SearchFilterBar";
 import InsightsSection from "@/components/InsightsSection";
 import HeroKpis from "@/components/HeroKpis";
-import Chatbot from "@/components/Chatbot"; // Import the Chatbot
+import toolsJson from "@/data/tools.json"; // fallback
+import Chatbot from "@/components/Chatbot";
 import { Tool } from "@/types";
 
+const normalize = (s?: any) =>
+  (s ?? "").toString().toLowerCase().trim();
+
+const detectPricingCategory = (raw?: string) => {
+  const p = normalize(raw);
+  if (!p) return "unknown";
+  if (p.includes("freemium")) return "freemium";
+  // exact free but not freemium
+  if (p.includes("free") && !p.includes("freemium")) return "free";
+  // numeric price, currency symbols, monthly/subscription words -> paid
+  if (
+    /\$\d+|\d+\s?inr|\d+\s?₹|\d+\/month|\bmonthly\b|\bsubscription\b|\bpaid\b|\bhandler:price\b|\bper month\b/.test(
+      p
+    ) ||
+    p.match(/\d/)
+  )
+    return "paid";
+  // fallback: if it contains 'trial' + 'free' treat as freemium-ish
+  if (p.includes("trial") && p.includes("free")) return "freemium";
+  // fallback to checking keywords
+  if (p.includes("paid")) return "paid";
+  return p; // unknown token
+};
 
 const Index = () => {
-  // renamed state to avoid shadowing an import
-  const [tools, setTools] = useState<Tool[]>([]); // Typed state
+  const [allTools, setAllTools] = useState<Tool[]>([]); // Typed state
   const [filters, setFilters] = useState<FilterState>({
     search: "",
     category: "all",
@@ -18,36 +41,33 @@ const Index = () => {
   });
 
   const filtered = useMemo(() => {
-    const search = (filters.search || "").toLowerCase();
-
-    return tools.filter((t) => {
-      const name = (t.name || "").toLowerCase();
-      const desc = (t.description || "").toLowerCase();
-      const keyFeatures = Array.isArray(t.keyFeatures)
-        ? t.keyFeatures.map((f) => (f || "").toLowerCase())
-        : [];
+    return allTools.filter((t) => {
+      const search = (filters.search || "").toLowerCase();
 
       const matchSearch =
         !search ||
-        name.includes(search) ||
-        desc.includes(search) ||
-        keyFeatures.some((f) => f.includes(search));
+        t.name.toLowerCase().includes(search) ||
+        t.description.toLowerCase().includes(search) ||
+        Array.isArray(t.keyFeatures) &&
+        t.keyFeatures.some((f) => f.toLowerCase().includes(search));
 
       const matchCategory =
         !filters.category ||
         filters.category === "all" ||
-        (Array.isArray(t.categories) && t.categories.includes(filters.category));
+        (Array.isArray(t.categories) &&
+          t.categories.includes(filters.category));
 
       const matchPricing =
         !filters.pricing ||
         filters.pricing === "all" ||
-        String(t.pricingModel) === filters.pricing;
+        t.pricingModel === filters.pricing;
 
       return matchSearch && matchCategory && matchPricing;
     });
-  }, [tools, filters]); // include tools so memo updates after fetch
+  }, [filters]);
 
   useEffect(() => {
+    let mounted = true;
     const fetchTools = async () => {
       try {
         // Correct URL for default FastAPI server
@@ -56,28 +76,26 @@ const Index = () => {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data: Tool[] = await response.json(); // Type the response data
-        setTools(data);
+        setAllTools(data);
       } catch (error) {
         console.error("Failed to fetch tools:", error);
       }
     };
     fetchTools();
+    return () => {
+      mounted = false;
+    };
   }, []);
-
   const latest = useMemo(
     () =>
       [...filtered].sort(
-        (a, b) =>
-          (+new Date(b.releaseDate || 0) || 0) - (+new Date(a.releaseDate || 0) || 0)
+        (a, b) => +new Date(b.releaseDate) - +new Date(a.releaseDate)
       ),
     [filtered]
   );
 
   const popular = useMemo(
-    () =>
-      [...filtered].sort(
-        (a, b) => (b.popularity ?? 0) - (a.popularity ?? 0)
-      ),
+    () => [...filtered].sort((a, b) => b.popularity - a.popularity),
     [filtered]
   );
 
@@ -95,7 +113,13 @@ const Index = () => {
       <main className="container mx-auto px-4 py-8 space-y-8">
         <HeroKpis />
 
-        <SearchFilterBar value={filters} onChange={setFilters} />
+        <SearchFilterBar
+          value={filters}
+          onChange={setFilters}
+          // pass dynamic categories (normalized strings)
+          categories={availableCategories}
+          pricingOptions={pricingOptions}
+        />
 
         <section className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="space-y-4">
@@ -122,7 +146,8 @@ const Index = () => {
           <InsightsSection />
         </section>
       </main>
-      <Chatbot /> {/* Render the Chatbot component */}
+
+      <Chatbot />
     </>
   );
 };

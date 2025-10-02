@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth"; // ✅ Import your auth context
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -8,7 +9,8 @@ export default function Login() {
   const [message, setMessage] = useState("");
   const [color, setColor] = useState("red");
 
-  const navigate = useNavigate(); // <-- add this
+  const navigate = useNavigate();
+  const { login } = useAuth(); // ✅ Get login function from context
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,7 +25,11 @@ export default function Login() {
         },
       });
 
-      localStorage.setItem("token", res.data.access_token);
+      const token = res.data.access_token;
+      localStorage.setItem("token", token); // ✅ Persist token
+      sessionStorage.setItem("isLoggedIn", "true"); // ✅ Persist login state
+      login(); // ✅ Update context state
+
       setMessage("Login successful!");
       setColor("green");
 
@@ -59,7 +65,11 @@ export default function Login() {
           />
           <button type="submit" style={styles.button}>Log In</button>
         </form>
-        {message && <div style={{ color, marginTop: "15px", fontWeight: "bold", textAlign: "center" }}>{message}</div>}
+        {message && (
+          <div style={{ color, marginTop: "15px", fontWeight: "bold", textAlign: "center" }}>
+            {message}
+          </div>
+        )}
         <div style={{ textAlign: "center", marginTop: "20px", fontSize: "14px" }}>
           Don't have an account? <a href="/signup">Sign up here</a>
         </div>

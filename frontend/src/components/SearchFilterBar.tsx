@@ -1,86 +1,87 @@
-import { useEffect, useState } from "react";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { categories, pricingModels, Category, PricingModel } from "@/data/tools";
-import { Search } from "lucide-react";
+import React, { useEffect, useState } from "react";
 
 export type FilterState = {
   search: string;
-  category?: Category | "all";
-  pricing?: PricingModel | "all";
+  category: string;
+  pricing: string;
 };
 
-export default function SearchFilterBar({
-  value,
-  onChange,
-}: {
+type Props = {
   value: FilterState;
-  onChange: (v: FilterState) => void;
-}) {
+  onChange: (next: FilterState) => void;
+};
+
+const SearchFilterBar: React.FC<Props> = ({ value, onChange }) => {
   const [local, setLocal] = useState<FilterState>(value);
 
-  useEffect(() => setLocal(value), [value]);
+  // keep local in sync when parent changes filters (e.g. reset from elsewhere)
+  useEffect(() => {
+    setLocal(value);
+  }, [value]);
 
-  const apply = (patch: Partial<FilterState>) => {
-    const next = { ...local, ...patch } as FilterState;
-    setLocal(next);
-    onChange(next);
-  };
+  const handleApply = () => onChange(local);
 
-  const clear = () => {
-    const base = { search: "", category: "all" as const, pricing: "all" as const };
-    setLocal(base);
-    onChange(base);
+  const handleClear = () => {
+    const cleared: FilterState = { search: "", category: "all", pricing: "all" };
+    setLocal(cleared);
+    onChange(cleared);
   };
 
   return (
-    <div className="glass rounded-lg p-3 md:p-4 flex flex-col md:flex-row gap-3 items-stretch md:items-center">
-      <div className="flex-1 flex items-center gap-2">
-        <Search className="h-4 w-4 text-muted-foreground" />
-        <Input
-          placeholder="Search tools by name or keyword"
-          value={local.search}
-          onChange={(e) => apply({ search: e.target.value })}
-          className="bg-transparent"
-        />
-      </div>
-      <Select
-        value={local.category ?? "all"}
-        onValueChange={(v) => apply({ category: v as any })}
-      >
-        <SelectTrigger className="w-full md:w-56">
-          <SelectValue placeholder="Category" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="all">All categories</SelectItem>
-          {categories.map((c) => (
-            <SelectItem key={c} value={c}>{c}</SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-      <Select
-        value={local.pricing ?? "all"}
-        onValueChange={(v) => apply({ pricing: v as any })}
-      >
-        <SelectTrigger className="w-full md:w-44">
-          <SelectValue placeholder="Pricing" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="all">All pricing</SelectItem>
-          {pricingModels.map((p) => (
-            <SelectItem key={p} value={p} className="capitalize">
-              {p}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-      <div className="md:ml-auto flex gap-2">
-        <Button variant="glass" onClick={clear} className="">
-          Clear
-        </Button>
-        <Button variant="neon">Apply</Button>
+    <div className="w-full rounded-lg p-4 bg-white shadow-sm">
+      <div className="flex flex-col sm:flex-row gap-3 items-center">
+        <div className="flex-1">
+          <input
+            type="search"
+            value={local.search}
+            onChange={(e) => setLocal({ ...local, search: e.target.value })}
+            onKeyDown={(e) => e.key === "Enter" && handleApply()}
+            placeholder="Search tools by name or keyword"
+            className="w-full rounded-md border px-4 py-3"
+            aria-label="Search tools"
+          />
+        </div>
+
+        <select
+          value={local.category}
+          onChange={(e) => setLocal({ ...local, category: e.target.value })}
+          className="rounded-md border px-4 py-3"
+          aria-label="Category"
+        >
+          <option value="all">All categories</option>
+          <option value="image">Image</option>
+          <option value="text">Text</option>
+          <option value="code">Code</option>
+          <option value="audio">Audio</option>
+          <option value="analytics">Analytics</option>
+        </select>
+
+        <select
+          value={local.pricing}
+          onChange={(e) => setLocal({ ...local, pricing: e.target.value })}
+          className="rounded-md border px-4 py-3"
+          aria-label="Pricing"
+        >
+          <option value="all">All pricing</option>
+          <option value="free">Free</option>
+          <option value="freemium">Freemium</option>
+          <option value="paid">Paid</option>
+        </select>
+
+        <div className="flex gap-2">
+          <button onClick={handleClear} className="px-4 py-2 rounded-md border">
+            Clear
+          </button>
+          <button
+            onClick={handleApply}
+            className="px-4 py-2 rounded-md bg-gradient-to-r from-pink-300 to-indigo-300"
+          >
+            Apply
+          </button>
+        </div>
       </div>
     </div>
   );
-}
+};
+
+export default SearchFilterBar;

@@ -1,12 +1,13 @@
 from fastapi import FastAPI, HTTPException, Depends, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi.responses import JSONResponse
 from pymongo import MongoClient
 from dotenv import load_dotenv
 import os
 from passlib.context import CryptContext
 from jose import JWTError, jwt
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from pydantic import BaseModel
 from typing import List, Optional
 from pydantic import BaseModel
@@ -47,7 +48,8 @@ origins = [
 # --- CORS Middleware ---
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:8080"],
+    # allow_origins=["http://localhost:8080"],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -112,9 +114,9 @@ def get_password_hash(password):
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     to_encode = data.copy()
     if expires_delta:
-        expire = datetime.utcnow() + expires_delta
+        expire = datetime.now(timezone.utc) + expires_delta
     else:
-        expire = datetime.utcnow() + timedelta(minutes=15)
+        expire = datetime.now(timezone.utc) + timedelta(minutes=15)
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
@@ -155,17 +157,52 @@ class ChatRequest(BaseModel):
 class ChatResponse(BaseModel):
     reply: str
 
+from fastapi import HTTPException
+from fastapi.responses import JSONResponse
+
 @app.get("/api/tools")
 def get_all_tools():
     if tools_collection is None:
+        print("❌ tools_collection is None")
         raise HTTPException(status_code=500, detail="Database connection not configured.")
+
     try:
-        tools = list(tools_collection.find({}, {'_id': 0}))
-        if not tools:
+        raw_tools = list(tools_collection.find({}, {"_id": 0}))
+        if not raw_tools:
+            print("⚠️ No tools found in the database.")
             raise HTTPException(status_code=404, detail="No tools found in the database.")
-        return tools
+
+        # Defensive sanitization
+        tools = [
+            {
+                "id": tool.get("id", ""),
+                "name": tool.get("name", ""),
+                "description": tool.get("description", ""),
+                "categories": tool.get("categories", []),
+                "useCases": tool.get("useCases", []),
+                "trendScore": tool.get("trendScore", 0),
+                "website": tool.get("website", ""),
+                "github": tool.get("github", ""),
+                "docs": tool.get("docs", ""),
+                "createdAt": tool.get("createdAt", ""),
+            }
+            for tool in raw_tools
+        ]
+
+        return JSONResponse(content=tools)
+
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        print("❌ Error in /api/tools:", repr(e))
+        raise HTTPException(status_code=500, detail="Internal Server Error")
+
+@app.get("/api/tools/{tool_id}")
+def get_tool_by_id(tool_id: str):
+    if tools_collection is None:
+        raise HTTPException(status_code=500, detail="Database connection not configured.")
+    tool = tools_collection.find_one({"id": tool_id}, {'_id': 0})
+    if not tool:
+        raise HTTPException(status_code=404, detail="Tool not found.")
+    return tool
 
 def tool_helper(tool) -> dict:
     return {
@@ -279,22 +316,28 @@ def read_users_me(current_user: dict = Depends(get_current_user)):
     current_user.pop('hashed_password', None) # Don't send the hash back
     return current_user
 
+# Popular tools (sorted by popularity descending)
 @app.get("/tools/popular")
 def get_popular():
-    tools = list(tools_collection.find({}, {'_id': 0}))
-    return list(tools.find().sort("popularity", -1).limit(10))
+    tools = list(tools_collection.find({}, {"_id": 0}).sort("popularity", -1).limit(10))
+    return tools
 
-# Latest (based on trendScore instead of releaseDate)
+# Latest tools (sorted by trendScore descending)
 @app.get("/tools/latest")
 def get_latest():
-    tools = list(tools_collection.find({}, {'_id': 0}))
-    return list(tools.find().sort("trendScore", -1).limit(10))
+    tools = list(tools_collection.find({}, {"_id": 0}).sort("trendScore", -1).limit(10))
+    return tools
 
 
 @app.post("/api/consultant")
 async def get_project_recommendation(query: ConsultantQuery, current_user: dict = Depends(get_current_user)):
-    if not all([client, users_collection, gemini_model, embedding_model]):
-        raise HTTPException(status_code=503, detail="A backend service is not available.")
+    if (
+        client is None or
+        gemini_model is None or
+        embedding_model is None or
+        users_collection is None  # must be checked with `is None`
+    ):
+        raise HTTPException(status_code=500, detail="Missing required dependencies")
 
     try:
         # 1. RETRIEVAL
@@ -335,7 +378,7 @@ async def get_project_recommendation(query: ConsultantQuery, current_user: dict 
         conversation_entry = {
             "prompt": query.prompt,
             "recommendation": recommendation_text,
-            "timestamp": datetime.utcnow()
+            "timestamp": datetime.now(timezone.utc)
         }
         users_collection.update_one(
             {"email": current_user["email"]},

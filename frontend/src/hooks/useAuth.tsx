@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 
 type AuthContextType = {
   isLoggedIn: boolean;
@@ -13,7 +13,16 @@ type AuthProviderProps = {
 };
 
 export const AuthProvider = ({ children }: AuthProviderProps): JSX.Element => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(() => {
+    // Initialize from sessionStorage
+    const stored = sessionStorage.getItem("isLoggedIn");
+    return stored === "true";
+  });
+
+  useEffect(() => {
+    // Sync changes to sessionStorage
+    sessionStorage.setItem("isLoggedIn", String(isLoggedIn));
+  }, [isLoggedIn]);
 
   const login = () => setIsLoggedIn(true);
   const logout = () => setIsLoggedIn(false);

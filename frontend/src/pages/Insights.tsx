@@ -1,8 +1,20 @@
 import { Helmet } from "react-helmet-async";
 import InsightsSection from "@/components/InsightsSection";
 import Chatbot from "@/components/Chatbot";
+import { useEffect } from "react";
+import { useAuth } from "@/hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
 export default function Insights() {
+  const { isLoggedIn } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      navigate("/login");
+    }
+  }, [isLoggedIn, navigate]);
+
   return (
     <>
       <Helmet>
