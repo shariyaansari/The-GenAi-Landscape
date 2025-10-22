@@ -282,7 +282,7 @@ def signup(user: UserCreate):
         raise HTTPException(status_code=400, detail="Email already registered")
     
     hashed_password = get_password_hash(user.password)
-    user_dict = user.dict()
+    user_dict = user.model_dump()  # <-- Use model_dump instead of dict
     user_dict["hashed_password"] = hashed_password
     del user_dict["password"]
     
