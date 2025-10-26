@@ -6,6 +6,97 @@
 All colors MUST be HSL.
 */
 
+/* Neon/dark scrollbar theme */
+.dark-glass-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #172232 #29324b;
+}
+.dark-glass-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+.dark-glass-scrollbar::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #28384f 55%, #92f5fa55 95%);
+  border-radius: 4px;
+}
+.dark-glass-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.card-glossy {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1.25rem;
+  background: rgba(24, 28, 42, 0.7);
+  backdrop-filter: blur(18px) saturate(120%);
+  border: 1px solid rgba(255,255,255,0.12);
+  box-shadow: 0 2px 20px 0 rgb(80 110 255 / 7%);
+}
+
+.card-glossy::before {
+  content: '';
+  display: block;
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(255,255,255,0.16) 0%,
+    rgba(255,255,255,0.09) 100%
+  );
+  border-radius: inherit;
+  z-index: 1;
+  opacity: 0.87;
+  transition: opacity 0.35s;
+}
+.card-glossy:hover::before {
+  opacity: 0.97;
+}
+
+.card-glossy.neon-hover:hover {
+  box-shadow:
+    0 0 22px 6px #92f5fa55,
+    0 0 45px 8px #a084f522,
+    0 0 0 2px #fff3;
+}
+
+.glow-search-wrapper {
+  position: relative;
+  border-radius: 1.5rem;
+  overflow: visible;
+}
+.glow-search-bg {
+  position: absolute;
+  inset: -3px;
+  border-radius: 1.5rem;
+  z-index: 0;
+  pointer-events: none;
+  background: conic-gradient(
+    from 0deg,
+    #e0c3fc, #8ec5fc, #e0c3fc, #f9d29d, #a1c4fd, #e0c3fc 100%
+  );
+  opacity: 0.55;
+  filter: blur(7px);
+  transition: opacity 250ms, filter 300ms;
+}
+.glow-search-wrapper:focus-within .glow-search-bg,
+.glow-search-wrapper:hover .glow-search-bg {
+  filter: blur(13px);
+  opacity: 0.92;
+}
+
+.glass {
+  background: rgba(25, 27, 38, 0.69);
+  backdrop-filter: blur(18px);
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+  background-color: black;
+  overflow-x: hidden;
+}
+
+
 @layer base {
   :root {
     --background: 0 0% 100%;
