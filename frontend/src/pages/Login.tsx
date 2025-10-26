@@ -333,44 +333,44 @@ export default function Login() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
               </svg>
             </div>
-            <span>GenAI Landscape</span>
+            <span>GenAI</span>
           </div>
         </div>
 
-        <div className="relative z-20 flex items-end justify-center h-[500px]">
-          {/* Cartoon Characters */}
-          <div className="relative" style={{ width: '550px', height: '400px' }}>
+        <div className="relative z-20 flex items-center justify-center h-full">
+          {/* Cartoon Characters - Scaled up 1.5x */}
+          <div className="relative" style={{ width: '825px', height: '600px' }}>
             {/* Purple tall rectangle character - Back layer */}
             <div
               ref={purpleRef}
               className="absolute bottom-0 transition-all duration-700 ease-in-out"
               style={{
-                left: '70px',
-                width: '180px',
-                height: (isTyping || (password.length > 0 && !showPassword)) ? '440px' : '400px',
+                left: '105px',
+                width: '270px',
+                height: (isTyping || (password.length > 0 && !showPassword)) ? '660px' : '600px',
                 backgroundColor: '#6C3FF5',
-                borderRadius: '10px 10px 0 0',
+                borderRadius: '15px 15px 0 0',
                 zIndex: 1,
                 transform: (password.length > 0 && showPassword)
                   ? `skewX(0deg)`
                   : (isTyping || (password.length > 0 && !showPassword))
-                  ? `skewX(${(purplePos.bodySkew || 0) - 12}deg) translateX(40px)`
+                  ? `skewX(${(purplePos.bodySkew || 0) - 12}deg) translateX(60px)`
                   : `skewX(${purplePos.bodySkew || 0}deg)`,
                 transformOrigin: 'bottom center',
               }}
             >
               {/* Eyes */}
               <div
-                className="absolute flex gap-8 transition-all duration-700 ease-in-out"
+                className="absolute flex gap-12 transition-all duration-700 ease-in-out"
                 style={{
-                  left: (password.length > 0 && showPassword) ? `${20}px` : isLookingAtEachOther ? `${55}px` : `${45 + purplePos.faceX}px`,
-                  top: (password.length > 0 && showPassword) ? `${35}px` : isLookingAtEachOther ? `${65}px` : `${40 + purplePos.faceY}px`,
+                  left: (password.length > 0 && showPassword) ? `${30}px` : isLookingAtEachOther ? `${82}px` : `${67 + purplePos.faceX * 1.5}px`,
+                  top: (password.length > 0 && showPassword) ? `${52}px` : isLookingAtEachOther ? `${97}px` : `${60 + purplePos.faceY * 1.5}px`,
                 }}
               >
                 <EyeBall
-                  size={18}
-                  pupilSize={7}
-                  maxDistance={5}
+                  size={27}
+                  pupilSize={10}
+                  maxDistance={7}
                   eyeColor="white"
                   pupilColor="#2D2D2D"
                   isBlinking={isPurpleBlinking}
@@ -378,9 +378,9 @@ export default function Login() {
                   forceLookY={(password.length > 0 && showPassword) ? (isPurplePeeking ? 5 : -4) : isLookingAtEachOther ? 4 : undefined}
                 />
                 <EyeBall
-                  size={18}
-                  pupilSize={7}
-                  maxDistance={5}
+                  size={27}
+                  pupilSize={10}
+                  maxDistance={7}
                   eyeColor="white"
                   pupilColor="#2D2D2D"
                   isBlinking={isPurpleBlinking}
@@ -395,16 +395,16 @@ export default function Login() {
               ref={blackRef}
               className="absolute bottom-0 transition-all duration-700 ease-in-out"
               style={{
-                left: '240px',
-                width: '120px',
-                height: '310px',
+                left: '360px',
+                width: '180px',
+                height: '465px',
                 backgroundColor: '#2D2D2D',
-                borderRadius: '8px 8px 0 0',
+                borderRadius: '12px 12px 0 0',
                 zIndex: 2,
                 transform: (password.length > 0 && showPassword)
                   ? `skewX(0deg)`
                   : isLookingAtEachOther
-                  ? `skewX(${(blackPos.bodySkew || 0) * 1.5 + 10}deg) translateX(20px)`
+                  ? `skewX(${(blackPos.bodySkew || 0) * 1.5 + 10}deg) translateX(30px)`
                   : (isTyping || (password.length > 0 && !showPassword))
                   ? `skewX(${(blackPos.bodySkew || 0) * 1.5}deg)`
                   : `skewX(${blackPos.bodySkew || 0}deg)`,
@@ -413,16 +413,16 @@ export default function Login() {
             >
               {/* Eyes */}
               <div
-                className="absolute flex gap-6 transition-all duration-700 ease-in-out"
+                className="absolute flex gap-9 transition-all duration-700 ease-in-out"
                 style={{
-                  left: (password.length > 0 && showPassword) ? `${10}px` : isLookingAtEachOther ? `${32}px` : `${26 + blackPos.faceX}px`,
-                  top: (password.length > 0 && showPassword) ? `${28}px` : isLookingAtEachOther ? `${12}px` : `${32 + blackPos.faceY}px`,
+                  left: (password.length > 0 && showPassword) ? `${15}px` : isLookingAtEachOther ? `${48}px` : `${39 + blackPos.faceX * 1.5}px`,
+                  top: (password.length > 0 && showPassword) ? `${42}px` : isLookingAtEachOther ? `${18}px` : `${48 + blackPos.faceY * 1.5}px`,
                 }}
               >
                 <EyeBall
-                  size={16}
-                  pupilSize={6}
-                  maxDistance={4}
+                  size={24}
+                  pupilSize={9}
+                  maxDistance={6}
                   eyeColor="white"
                   pupilColor="#2D2D2D"
                   isBlinking={isBlackBlinking}
@@ -430,9 +430,9 @@ export default function Login() {
                   forceLookY={(password.length > 0 && showPassword) ? -4 : isLookingAtEachOther ? -4 : undefined}
                 />
                 <EyeBall
-                  size={16}
-                  pupilSize={6}
-                  maxDistance={4}
+                  size={24}
+                  pupilSize={9}
+                  maxDistance={6}
                   eyeColor="white"
                   pupilColor="#2D2D2D"
                   isBlinking={isBlackBlinking}
@@ -448,25 +448,25 @@ export default function Login() {
               className="absolute bottom-0 transition-all duration-700 ease-in-out"
               style={{
                 left: '0px',
-                width: '240px',
-                height: '200px',
+                width: '360px',
+                height: '300px',
                 zIndex: 3,
                 backgroundColor: '#FF9B6B',
-                borderRadius: '120px 120px 0 0',
+                borderRadius: '180px 180px 0 0',
                 transform: (password.length > 0 && showPassword) ? `skewX(0deg)` : `skewX(${orangePos.bodySkew || 0}deg)`,
                 transformOrigin: 'bottom center',
               }}
             >
               {/* Eyes - just pupils, no white */}
               <div
-                className="absolute flex gap-8 transition-all duration-200 ease-out"
+                className="absolute flex gap-12 transition-all duration-200 ease-out"
                 style={{
-                  left: (password.length > 0 && showPassword) ? `${50}px` : `${82 + (orangePos.faceX || 0)}px`,
-                  top: (password.length > 0 && showPassword) ? `${85}px` : `${90 + (orangePos.faceY || 0)}px`,
+                  left: (password.length > 0 && showPassword) ? `${75}px` : `${123 + (orangePos.faceX || 0) * 1.5}px`,
+                  top: (password.length > 0 && showPassword) ? `${127}px` : `${135 + (orangePos.faceY || 0) * 1.5}px`,
                 }}
               >
-                <Pupil size={12} maxDistance={5} pupilColor="#2D2D2D" forceLookX={(password.length > 0 && showPassword) ? -5 : undefined} forceLookY={(password.length > 0 && showPassword) ? -4 : undefined} />
-                <Pupil size={12} maxDistance={5} pupilColor="#2D2D2D" forceLookX={(password.length > 0 && showPassword) ? -5 : undefined} forceLookY={(password.length > 0 && showPassword) ? -4 : undefined} />
+                <Pupil size={18} maxDistance={7} pupilColor="#2D2D2D" forceLookX={(password.length > 0 && showPassword) ? -5 : undefined} forceLookY={(password.length > 0 && showPassword) ? -4 : undefined} />
+                <Pupil size={18} maxDistance={7} pupilColor="#2D2D2D" forceLookX={(password.length > 0 && showPassword) ? -5 : undefined} forceLookY={(password.length > 0 && showPassword) ? -4 : undefined} />
               </div>
             </div>
 
@@ -475,11 +475,11 @@ export default function Login() {
               ref={yellowRef}
               className="absolute bottom-0 transition-all duration-700 ease-in-out"
               style={{
-                left: '310px',
-                width: '140px',
-                height: '230px',
+                left: '465px',
+                width: '210px',
+                height: '345px',
                 backgroundColor: '#E8D754',
-                borderRadius: '70px 70px 0 0',
+                borderRadius: '105px 105px 0 0',
                 zIndex: 4,
                 transform: (password.length > 0 && showPassword) ? `skewX(0deg)` : `skewX(${yellowPos.bodySkew || 0}deg)`,
                 transformOrigin: 'bottom center',
@@ -487,43 +487,32 @@ export default function Login() {
             >
               {/* Eyes - just pupils, no white */}
               <div
-                className="absolute flex gap-6 transition-all duration-200 ease-out"
+                className="absolute flex gap-9 transition-all duration-200 ease-out"
                 style={{
-                  left: (password.length > 0 && showPassword) ? `${20}px` : `${52 + (yellowPos.faceX || 0)}px`,
-                  top: (password.length > 0 && showPassword) ? `${35}px` : `${40 + (yellowPos.faceY || 0)}px`,
+                  left: (password.length > 0 && showPassword) ? `${30}px` : `${78 + (yellowPos.faceX || 0) * 1.5}px`,
+                  top: (password.length > 0 && showPassword) ? `${52}px` : `${60 + (yellowPos.faceY || 0) * 1.5}px`,
                 }}
               >
-                <Pupil size={12} maxDistance={5} pupilColor="#2D2D2D" forceLookX={(password.length > 0 && showPassword) ? -5 : undefined} forceLookY={(password.length > 0 && showPassword) ? -4 : undefined} />
-                <Pupil size={12} maxDistance={5} pupilColor="#2D2D2D" forceLookX={(password.length > 0 && showPassword) ? -5 : undefined} forceLookY={(password.length > 0 && showPassword) ? -4 : undefined} />
+                <Pupil size={18} maxDistance={7} pupilColor="#2D2D2D" forceLookX={(password.length > 0 && showPassword) ? -5 : undefined} forceLookY={(password.length > 0 && showPassword) ? -4 : undefined} />
+                <Pupil size={18} maxDistance={7} pupilColor="#2D2D2D" forceLookX={(password.length > 0 && showPassword) ? -5 : undefined} forceLookY={(password.length > 0 && showPassword) ? -4 : undefined} />
               </div>
               {/* Horizontal line for mouth */}
               <div
-                className="absolute w-20 h-[4px] bg-[#2D2D2D] rounded-full transition-all duration-200 ease-out"
+                className="absolute w-30 h-[6px] bg-[#2D2D2D] rounded-full transition-all duration-200 ease-out"
                 style={{
-                  left: (password.length > 0 && showPassword) ? `${10}px` : `${40 + (yellowPos.faceX || 0)}px`,
-                  top: (password.length > 0 && showPassword) ? `${88}px` : `${88 + (yellowPos.faceY || 0)}px`,
+                  left: (password.length > 0 && showPassword) ? `${15}px` : `${60 + (yellowPos.faceX || 0) * 1.5}px`,
+                  top: (password.length > 0 && showPassword) ? `${132}px` : `${132 + (yellowPos.faceY || 0) * 1.5}px`,
                 }}
               />
             </div>
           </div>
         </div>
 
-        <div className="relative z-20 flex items-center gap-8 text-sm text-white/60">
-          <a href="#" className="hover:text-white transition-colors">
-            Privacy Policy
-          </a>
-          <a href="#" className="hover:text-white transition-colors">
-            Terms of Service
-          </a>
-          <a href="#" className="hover:text-white transition-colors">
-            Contact
-          </a>
-        </div>
-
-        {/* Decorative elements */}
+        {/* Decorative elements with neon glow */}
         <div className="absolute inset-0 bg-[size:20px_20px] opacity-5" style={{ backgroundImage: 'linear-gradient(white 1px, transparent 1px), linear-gradient(to right, white 1px, transparent 1px)' }} />
-        <div className="absolute top-1/4 right-1/4 size-64 bg-white/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 left-1/4 size-96 bg-white/5 rounded-full blur-3xl" />
+        <div className="absolute top-1/4 right-1/4 size-96 bg-cyan-400/20 rounded-full blur-3xl" style={{ boxShadow: '0 0 100px 40px rgba(34, 211, 238, 0.3)' }} />
+        <div className="absolute bottom-1/4 left-1/4 size-96 bg-purple-500/15 rounded-full blur-3xl" style={{ boxShadow: '0 0 100px 40px rgba(168, 85, 247, 0.25)' }} />
+        <div className="absolute top-1/2 left-1/2 size-72 bg-blue-500/10 rounded-full blur-3xl" style={{ boxShadow: '0 0 80px 30px rgba(59, 130, 246, 0.2)' }} />
       </div>
 
       {/* Right Login Section */}
@@ -536,7 +525,7 @@ export default function Login() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
               </svg>
             </div>
-            <span>YourBrand</span>
+            <span>GenAI</span>
           </div>
 
           {/* Header */}
