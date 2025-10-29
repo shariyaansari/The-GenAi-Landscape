@@ -72,7 +72,7 @@ export default function Trends() {
                 </div>
 
                 <section className="rounded-xl bg-gradient-primary glow p-6 text-center relative z-10">
-                    <h1 className="text-3xl font-semibold">Discover what’s next in AI</h1>
+                    <h1 className="text-3xl font-semibold text-black">Discover what’s next in AI</h1>
                     <p className="text-muted-foreground mt-2">
                         Emerging tools, rising categories, and breakthrough tech.
                     </p>

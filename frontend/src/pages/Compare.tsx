@@ -63,7 +63,7 @@ export default function Compare() {
 
       <main className="container mx-auto px-4 py-8 space-y-6">
         <section className="rounded-xl bg-gradient-primary glow p-6 text-center">
-          <h1 className="text-3xl font-semibold">Tool Comparator</h1>
+          <h1 className="text-3xl font-semibold text-black">Tool Comparator</h1>
           <p className="text-muted-foreground mt-2">Select up to three tools and compare them side by side.</p>
         </section>
 

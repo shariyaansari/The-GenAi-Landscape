@@ -65,10 +65,10 @@ export default function ToolCard({ tool }) {
 				{/* Hover overlay description */}
 				<div
 					className="absolute inset-0 z-20 flex items-center justify-center
-          opacity-0 group-hover:opacity-100 transition-all duration-300
-          bg-gradient-to-b from-black/60 via-black/80 to-black/90 
-          rounded-2xl p-6 backdrop-blur-lg border border-white/10
-          text-gray-100 text-[0.9rem] leading-relaxed font-medium"
+        opacity-0 group-hover:opacity-100 transition-all duration-300
+        bg-gradient-to-b from-black/60 via-black/80 to-black/90 
+        rounded-2xl p-6 backdrop-blur-lg border border-white/10
+        text-gray-100 text-[0.9rem] leading-relaxed font-medium"
 				>
 					<div className="max-h-[80%] overflow-y-auto px-1 dark-glass-scrollbar">
 						{tool.description || "No description available."}

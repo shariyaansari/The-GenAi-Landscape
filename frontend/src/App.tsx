@@ -19,7 +19,7 @@ import Consultant from "./pages/Consultant";
 const queryClient = new QueryClient();
 
 const Layout = () => (
-  <div className="min-h-screen w-full bg-background">
+  <div className="min-h-screen w-full bg-background bg-black">
     <AppHeader />
     <main className="container mx-auto px-4 py-6">
       <Outlet />

@@ -123,9 +123,9 @@ export default function InsightsSection() {
 
 	return (
 		<section className="grid grid-cols-1 md:grid-cols-2 gap-6">
-			<Card className="glass col-span-1 md:col-span-2">
+			<Card className="glass col-span-1 md:col-span-2 text-white">
 				<CardHeader>
-					<CardTitle>Pricing Model Distribution</CardTitle>
+					<CardTitle className="text-muted-foreground">Pricing Model Distribution</CardTitle>
 				</CardHeader>
 				<CardContent className="h-80">
 					<ResponsiveContainer width="100%" height="95%">
@@ -187,7 +187,7 @@ export default function InsightsSection() {
 				<div className="flex justify-end items-center gap-2">
 					<span className="text-sm font-medium">Filter by Year:</span>
 					<Select value={selectedYear} onValueChange={setSelectedYear}>
-						<SelectTrigger className="w-[180px]">
+						<SelectTrigger className="w-[180px] text-black">
 							<SelectValue placeholder="Select a year" />
 						</SelectTrigger>
 						<SelectContent>
@@ -202,7 +202,7 @@ export default function InsightsSection() {
 
 				<div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 					{/* Release Timeline Chart */}
-					<Card className="glass shadow-lg rounded-xl border border-neutral-200 p-0">
+					<Card className="glass shadow-lg rounded-xl border border-neutral-200 p-0 text-muted-foreground">
 						<CardHeader>
 							<CardTitle>Release Timeline</CardTitle>
 						</CardHeader>
@@ -266,7 +266,7 @@ export default function InsightsSection() {
 					</Card>
 
 					{/* Growth by Category Chart */}
-					<Card className="glass shadow-lg rounded-xl border border-neutral-200 p-0">
+					<Card className="glass shadow-lg rounded-xl border border-neutral-200 p-0 text-muted-foreground">
 						<CardHeader>
 							<CardTitle>Growth by Category</CardTitle>
 						</CardHeader>

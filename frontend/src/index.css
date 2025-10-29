@@ -11,16 +11,28 @@ All colors MUST be HSL.
   scrollbar-width: thin;
   scrollbar-color: #172232 #29324b;
 }
+
 .dark-glass-scrollbar::-webkit-scrollbar {
   width: 8px;
 }
+
 .dark-glass-scrollbar::-webkit-scrollbar-thumb {
   background: linear-gradient(135deg, #28384f 55%, #92f5fa55 95%);
   border-radius: 4px;
 }
+
 .dark-glass-scrollbar::-webkit-scrollbar-track {
   background: transparent;
 }
+
+/* .glow {
+  pointer-events: none;
+  z-index: 0;
+} */
+body {
+  background: #000 !important;
+}
+
 
 .card-glossy {
   position: relative;
@@ -28,7 +40,7 @@ All colors MUST be HSL.
   border-radius: 1.25rem;
   background: rgba(24, 28, 42, 0.7);
   backdrop-filter: blur(18px) saturate(120%);
-  border: 1px solid rgba(255,255,255,0.12);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   box-shadow: 0 2px 20px 0 rgb(80 110 255 / 7%);
 }
 
@@ -38,16 +50,15 @@ All colors MUST be HSL.
   pointer-events: none;
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    135deg,
-    rgba(255,255,255,0.16) 0%,
-    rgba(255,255,255,0.09) 100%
-  );
+  background: linear-gradient(135deg,
+      rgba(255, 255, 255, 0.16) 0%,
+      rgba(255, 255, 255, 0.09) 100%);
   border-radius: inherit;
   z-index: 1;
   opacity: 0.87;
   transition: opacity 0.35s;
 }
+
 .card-glossy:hover::before {
   opacity: 0.97;
 }
@@ -64,20 +75,20 @@ All colors MUST be HSL.
   border-radius: 1.5rem;
   overflow: visible;
 }
+
 .glow-search-bg {
   position: absolute;
   inset: -3px;
   border-radius: 1.5rem;
   z-index: 0;
   pointer-events: none;
-  background: conic-gradient(
-    from 0deg,
-    #e0c3fc, #8ec5fc, #e0c3fc, #f9d29d, #a1c4fd, #e0c3fc 100%
-  );
+  background: conic-gradient(from 0deg,
+      #e0c3fc, #8ec5fc, #e0c3fc, #f9d29d, #a1c4fd, #e0c3fc 100%);
   opacity: 0.55;
   filter: blur(7px);
   transition: opacity 250ms, filter 300ms;
 }
+
 .glow-search-wrapper:focus-within .glow-search-bg,
 .glow-search-wrapper:hover .glow-search-bg {
   filter: blur(13px);
@@ -89,11 +100,14 @@ All colors MUST be HSL.
   backdrop-filter: blur(18px);
 }
 
-html, body {
+html,
+body {
   height: 100%;
   width: 100%;
-  background-color: black;
-  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+  background-color: #000 !important;
+  color: white;
 }
 
 
@@ -108,7 +122,8 @@ html, body {
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 221 83% 53%; /* primary blue */
+    --primary: 221 83% 53%;
+    /* primary blue */
     --primary-foreground: 210 40% 98%;
 
     --secondary: 210 40% 96.1%;
@@ -134,16 +149,19 @@ html, body {
     --pastel-blue: 210 100% 93%;
 
     /* Chart tokens */
-    --chart-primary: 221 83% 53%; /* blue */
-    --chart-positive: 142 76% 36%; /* green */
-    --chart-warning: 24 95% 53%; /* orange */
+    --chart-primary: 221 83% 53%;
+    /* blue */
+    --chart-positive: 142 76% 36%;
+    /* green */
+    --chart-warning: 24 95% 53%;
+    /* orange */
 
     /* Gradients & effects */
     --gradient-primary: linear-gradient(135deg, hsl(var(--pastel-lavender)) 0%, hsl(var(--pastel-pink)) 30%, hsl(var(--pastel-mint)) 65%, hsl(var(--pastel-blue)) 100%);
     --gradient-app-bg: linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(210 40% 98%) 100%);
     --shadow-elegant: 0 8px 24px -10px hsl(var(--primary) / 0.25);
     --shadow-glow: 0 0 32px hsl(var(--primary) / 0.25);
-    
+
     --radius: 0.75rem;
 
     --sidebar-background: 0 0% 98%;
@@ -157,10 +175,10 @@ html, body {
   }
 
   .dark {
-    --background: 228 24% 10%;
+    --background: 0 0% 0%;  /* pure black */
     --foreground: 210 40% 98%;
 
-    --card: 230 24% 12%;
+    --card: 0 0% 0%;
     --card-foreground: 210 40% 98%;
 
     --popover: 230 24% 12%;
@@ -205,7 +223,9 @@ html, body {
     @apply bg-background text-foreground font-space antialiased;
   }
 
-  h1, h2, h3 {
+  h1,
+  h2,
+  h3 {
     @apply font-inter tracking-tight font-bold;
   }
 }
@@ -214,26 +234,32 @@ html, body {
   .bg-gradient-primary {
     background-image: var(--gradient-primary);
   }
+
   .glass {
     background-color: hsl(var(--card) / 0.6);
     border: 1px solid hsl(var(--border) / 0.5);
     backdrop-filter: blur(12px);
   }
+
   .glow {
     box-shadow: var(--shadow-glow);
   }
+
   .hover-scale {
     transition: transform 0.2s ease;
     will-change: transform;
   }
+
   .hover-scale:hover {
     transform: translateZ(0) scale(1.03);
   }
+
   .story-link {
     position: relative;
     display: inline-flex;
     align-items: center;
   }
+
   .story-link::after {
     content: "";
     position: absolute;
@@ -246,8 +272,14 @@ html, body {
     transform-origin: right;
     transition: transform 300ms ease;
   }
+
   .story-link:hover::after {
     transform: scaleX(1);
     transform-origin: left;
   }
+}
+
+#root {
+  min-height: 100vh;
+  background: #000;
 }

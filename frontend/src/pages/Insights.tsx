@@ -14,9 +14,9 @@ export default function Insights() {
         <link rel="canonical" href="/insights" />
       </Helmet>
 
-      <main className="container mx-auto px-4 py-8 space-y-6">
+      <main className="container mx-auto px-4 py-8 space-y-6 text-white">
         <section className="rounded-xl bg-gradient-primary glow p-6 text-center">
-          <h1 className="text-3xl font-semibold">AI Insights</h1>
+          <h1 className="text-3xl font-semibold text-black">AI Insights</h1>
           <p className="text-muted-foreground mt-2">Trends, growth by category, and market signals.</p>
         </section>
 
