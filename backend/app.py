@@ -13,6 +13,7 @@ from typing import List, Optional
 from pydantic import BaseModel
 from sentence_transformers import SentenceTransformer
 import google.generativeai as genai
+from fastapi import Body, HTTPException
 
 
 
@@ -405,6 +406,59 @@ async def get_consultant_history(current_user: dict = Depends(get_current_user))
     sorted_history = sorted(history, key=lambda x: x['timestamp'], reverse=True)
 
     return sorted_history
+
+# Add this model at the top with your other Pydantic models
+class ResetPasswordRequest(BaseModel):
+    email: str
+    newPassword: str
+
+
+# Replace your /api/reset-password endpoint with this
+@app.post("/api/reset-password")
+def reset_password(payload: ResetPasswordRequest):
+    """Reset password for demo accounts - no email verification"""
+    
+    print(f"\n🔄 Password reset attempt for: {payload.email}")
+    
+    if not payload.email or not payload.newPassword:
+        raise HTTPException(status_code=400, detail="Email and new password required")
+    
+    if len(payload.newPassword) < 6:
+        raise HTTPException(status_code=400, detail="Password must be at least 6 characters")
+    
+    if users_collection is None:
+        raise HTTPException(status_code=500, detail="Database not configured")
+    
+    # Find user
+    user = users_collection.find_one({"email": payload.email})
+    if not user:
+        print(f"❌ User not found: {payload.email}")
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    print(f"✅ Found user: {payload.email}")
+    print(f"   Current hash: {user.get('hashed_password', 'N/A')[:30]}...")
+    
+    # Hash the new password
+    new_hashed_password = get_password_hash(payload.newPassword)
+    print(f"   New hash: {new_hashed_password[:30]}...")
+    
+    # ⚠️ CRITICAL: Update "hashed_password" field
+    result = users_collection.update_one(
+        {"_id": user["_id"]},
+        {"$set": {"hashed_password": new_hashed_password}}
+    )
+    
+    print(f"✅ MongoDB update - Matched: {result.matched_count}, Modified: {result.modified_count}")
+    
+    # Verify the update worked
+    updated_user = users_collection.find_one({"email": payload.email})
+    print(f"   Verified hash: {updated_user.get('hashed_password', 'N/A')[:30]}...")
+    
+    if result.modified_count == 0:
+        raise HTTPException(status_code=500, detail="Failed to update password")
+    
+    print(f"✅ Password successfully reset for {payload.email}\n")
+    return {"detail": "Password updated successfully"}
 
 # --- NEW: Add this block at the very end of the file ---
 if __name__ == "__main__":
