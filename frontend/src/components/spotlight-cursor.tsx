@@ -1,8 +1,7 @@
 import React, { useEffect, useRef } from "react";
 
-// You can tune these for your design
 const SPOTLIGHT_SIZE = 220;
-const FADE = "rgba(120,255,240,0.15)"; // Soft turquoise glow
+const FADE = "rgba(120,255,240,0.15)"; 
 
 const SpotlightCursor: React.FC = () => {
   const spotlightRef = useRef<HTMLDivElement>(null);

@@ -256,7 +256,7 @@ export default function Signup() {
   const char2Pos = calculatePosition(char2Ref);
   const char3Pos = calculatePosition(char3Ref);
   const char4Pos = calculatePosition(char4Ref);
-  const char5Pos = calculatePosition(char5Ref);
+  const char5Pos = calculatePosition(char5Ref); 
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -475,10 +475,10 @@ export default function Signup() {
       <div className="absolute top-1/2 left-1/2 size-72 bg-pink-500/10 rounded-full blur-3xl" style={{ boxShadow: '0 0 80px 30px rgba(236, 72, 153, 0.2)' }} />
 
       {/* Center Form */}
-      <div className="relative z-10 w-full max-w-[450px] bg-white/95 backdrop-blur-sm rounded-xl shadow-2xl p-8">
+      <div className="relative z-10 w-full max-w-[450px] bg-black/95 backdrop-blur-sm rounded-xl shadow-2xl p-8">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold tracking-tight mb-2 text-gray-900">
+          <h1 className="text-3xl font-bold tracking-tight mb-2 text-white">
             Create an Account
           </h1>
           <p className="text-gray-500 text-sm">Please fill in your details to sign up</p>
@@ -487,7 +487,7 @@ export default function Signup() {
         {/* Signup Form */}
         <form onSubmit={handleSignup} className="space-y-5">
           <div className="space-y-2">
-            <label htmlFor="email" className="text-sm font-medium text-gray-900">Email</label>
+            <label htmlFor="email" className="text-sm font-medium text-white">Email</label>
             <input
               id="email"
               type="email"
@@ -500,7 +500,7 @@ export default function Signup() {
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="password" className="text-sm font-medium text-gray-900">Password</label>
+            <label htmlFor="password" className="text-sm font-medium text-white">Password</label>
             <div className="relative">
               <input
                 id="password"
@@ -509,7 +509,7 @@ export default function Signup() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="flex h-12 w-full rounded-md border border-gray-300 bg-white px-3 py-2 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 transition-all text-gray-900"
+                className="flex h-12 w-full rounded-md border border-gray-300 bg-white px-3 py-2 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 transition-all text-white"
               />
               <button
                 type="button"
@@ -531,7 +531,7 @@ export default function Signup() {
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="confirmPassword" className="text-sm font-medium text-gray-900">Confirm Password</label>
+            <label htmlFor="confirmPassword" className="text-sm font-medium text-white">Confirm Password</label>
             <div className="relative">
               <input
                 id="confirmPassword"
@@ -578,7 +578,7 @@ export default function Signup() {
         {/* Login Link */}
         <div className="text-center text-sm text-gray-500 mt-6">
           Already have an account?{" "}
-          <a href="/login" className="text-gray-900 font-medium hover:underline">
+          <a href="/login" className="text-white font-medium hover:underline">
             Log in here
           </a>
         </div>

@@ -7,6 +7,8 @@ import ReactMarkdown from "react-markdown";
 import { Conversation } from "@/types";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
+import SpotlightCursor from "../components/spotlight-cursor";
+import { SparklesPreviewColorful } from "@/components/ui/demo";
 
 export default function Consultant() {
 	const { isLoggedIn } = useAuth();
@@ -101,18 +103,22 @@ export default function Consultant() {
 				<link rel="canonical" href="/consultant" />
 			</Helmet>
 			<main className="min-h-screen w-full bg-black from-[#090d15] via-[#101720] to-[#131313] flex flex-col items-center">
+				<SpotlightCursor />
+				<div className="absolute inset-0 w-full h-full">
+                    <SparklesPreviewColorful />
+                </div>
 				{/* Chat container */}
 				<section className="w-full max-w-2xl mx-auto flex flex-col grow justify-center md:justify-start pt-10 md:pt-20 pb-8 relative">
 					{/* Header */}
-					<section className="rounded-xl bg-gradient-primary glow p-6 text-center">
+					{/* <section className="rounded-xl bg-gradient-primary glow p-6 text-center">
 						<h1 className="text-3xl font-semibold text-black">AI Insights</h1>
 						<p className="text-muted-foreground mt-2">
 							Trends, growth by category, and market signals.
 						</p>
-					</section>
+					</section> */}
 
 					{/* Chat messages */}
-					<div className="relative w-full grow max-h-[50vh] md:max-h-[60vh] overflow-y-auto flex flex-col gap-3 px-0 py-2 scrollbar-thin scrollbar-thumb-[#464752] dark-glass-scrollbar bg-white/0">
+					<div className="relative w-full grow max-h-[50vh] md:max-h-[60vh] overflow-y-auto flex flex-col gap-3 px-0 py-2 scrollbar-thin scrollbar-thumb-[#464752] dark-glass-scrollbar bg-white/0 z-50 text-white">
 						{[...history]
 							.slice(0, 6)
 							.reverse()

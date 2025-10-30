@@ -70,7 +70,7 @@ export const AppHeader = () => {
 	const loginButtonElement = (
         <Button
             variant="outline"
-            className="px-4 py-2 text-xs border border-[#333] bg-[rgba(31,31,31,0.62)] text-gray-300 rounded-full hover:text-white hover:border-white/50 transition-colors w-full sm:w-auto"
+            className="px-4 py-2 text-xs border border-[#333] bg-[rgba(31,31,31,0.62)] text-gray-300 rounded-full hover:text-black hover:border-white/50 transition-colors w-full sm:w-auto"
             size="sm"
             onClick={() => (isLoggedIn ? handleLogout() : navigate("/login"))}
         >

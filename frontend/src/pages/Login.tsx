@@ -516,7 +516,7 @@ export default function Login() {
       </div>
 
       {/* Right Login Section */}
-      <div className="flex items-center justify-center p-8 bg-background">
+      <div className="flex items-center justify-center p-8 bg-black">
         <div className="w-full max-w-[420px]">
           {/* Mobile Logo */}
           <div className="lg:hidden flex items-center justify-center gap-2 text-lg font-semibold mb-12">
@@ -606,7 +606,7 @@ export default function Login() {
           {/* Sign Up Link */}
           <div className="text-center text-sm text-muted-foreground mt-8">
             Don't have an account?{" "}
-            <a href="/signup" className="text-foreground font-medium hover:underline">
+            <a href="/signup" className="text-foreground font-medium hover:underline text-white">
               Sign Up
             </a>
           </div>

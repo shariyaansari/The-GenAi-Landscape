@@ -5,6 +5,8 @@ import { tools, categories as toolCategories, pricingModels } from "@/data/tools
 import Chatbot from "@/components/Chatbot";
 import { SparklesPreviewColorful } from "@/components/ui/demo";
 import SearchFilterBar, { FilterState } from "@/components/SearchFilterBar";
+import SpotlightCursor from "../components/spotlight-cursor";
+
 
 function isEmergingRaw(t: any) {
     const releaseOk = !!t.releaseDate && !isNaN(new Date(t.releaseDate).getTime());
@@ -67,11 +69,12 @@ export default function Trends() {
             </Helmet>
 
             <main className="container mx-auto px-4 py-8 space-y-6 relative">
+                <SpotlightCursor />
                 <div className="absolute inset-0 w-full h-full">
                     <SparklesPreviewColorful />
                 </div>
 
-                <section className="rounded-xl bg-gradient-primary glow p-6 text-center relative z-10">
+                <section className="rounded-xl bg-gradient-primary glow p-6 text-center relative z-10 my-[100px]">
                     <h1 className="text-3xl font-semibold text-black">Discover what’s next in AI</h1>
                     <p className="text-muted-foreground mt-2">
                         Emerging tools, rising categories, and breakthrough tech.
