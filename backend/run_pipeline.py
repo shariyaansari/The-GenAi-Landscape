@@ -1,6 +1,7 @@
 import subprocess
 import json
 import os
+import sys
 from urllib.parse import urlparse
 import whois
 from datetime import datetime
@@ -58,12 +59,23 @@ def run_script(script_path):
     script_name = os.path.basename(script_path)
     
     print(f"--- Running: {script_name} in {script_dir} ---")
+    
     try:
-        # Run the script using the directory it lives in as the working directory
-        subprocess.run(["python", script_name], cwd=script_dir, check=True)
+        result = subprocess.run(
+            [sys.executable, script_name],  # ✅ FIXED HERE
+            cwd=script_dir,
+            check=True,
+            capture_output=True,
+            text=True
+        )
+        
+        print(result.stdout)  # optional but VERY useful for debugging
         return True
+        
     except subprocess.CalledProcessError as e:
-        print(f"❌ Error running {script_name}: {e}")
+        print(f"❌ Error running {script_name}")
+        print("STDOUT:\n", e.stdout)
+        print("STDERR:\n", e.stderr)
         return False
 
 
@@ -191,7 +203,7 @@ def get_domain_creation_date(url):
 
 def main():
     print("=" * 45)
-    print(f"🚀 Starting Path-Corrected Pipeline at {datetime.now()}")
+    print(f"Starting Pipeline at {datetime.now()}")
     print("=" * 45)
 
     # 3. DEFINE DYNAMIC PATHS

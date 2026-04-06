@@ -155,7 +155,7 @@ def generate_tool_id(name):
     s = re.sub(r'[^\w\-]', '', s)
     return s
 
-def fetch_product_hunt_tools(limit=100, seen_ids=None):
+def fetch_product_hunt_tools(limit=40, seen_ids=None):
     """
     Uses GraphQL to fetch AI tools in bulk. 
     Much faster and more reliable than Selenium.
@@ -297,7 +297,7 @@ def fetch_product_hunt_tools(limit=100, seen_ids=None):
 def main():
     state = load_state()
     seen_ids = set(state.get("processed_ids", []))
-    tools = fetch_product_hunt_tools(limit=100, seen_ids=seen_ids)  # Increase limit if needed
+    tools = fetch_product_hunt_tools(limit=40, seen_ids=seen_ids)  # Increase limit if needed
 
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         json.dump(tools, f, indent=2)
