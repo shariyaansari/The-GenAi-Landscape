@@ -7,6 +7,37 @@ import random
 from datetime import datetime
 import json
 import time
+import os
+
+STATE_FILE = "huggingface_scrape_state.json"
+OUTPUT_FILE = "huggingface_data.json"
+
+
+def load_state():
+    default_state = {"processed_urls": [], "last_run": None}
+    if not os.path.exists(STATE_FILE):
+        return default_state
+    try:
+        with open(STATE_FILE, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        processed_urls = data.get("processed_urls", [])
+        if not isinstance(processed_urls, list):
+            processed_urls = []
+        return {
+            "processed_urls": processed_urls,
+            "last_run": data.get("last_run")
+        }
+    except (OSError, json.JSONDecodeError):
+        return default_state
+
+
+def save_state(processed_urls):
+    state = {
+        "processed_urls": sorted(processed_urls),
+        "last_run": datetime.now().strftime("%Y-%m-%d")
+    }
+    with open(STATE_FILE, "w", encoding="utf-8") as f:
+        json.dump(state, f, indent=2)
 
 # --- Helper Function ---
 def generate_tool_id(name):
@@ -31,10 +62,15 @@ def main():
 
     # --- Step 2: Filter for only Hugging Face URLs ---
     huggingface_urls = [url for url in all_urls if 'huggingface.co' in url]
+    state = load_state()
+    processed_urls = set(state.get("processed_urls", []))
+    huggingface_urls = [url for url in huggingface_urls if url and url not in processed_urls]
     total_urls = len(huggingface_urls)
     
     if not huggingface_urls:
-        print("No Hugging Face URLs found in the master list.")
+        with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
+            json.dump([], f, indent=2)
+        print("No new Hugging Face URLs found in the master list.")
         return
         
     print(f"Found {total_urls} Hugging Face URLs to scrape.")
@@ -96,6 +132,7 @@ def main():
             tool_data['trendScore'] = random.randint(70, 95)
             
             all_models_data.append(tool_data)
+            processed_urls.add(url)
             time.sleep(1) # Be polite
 
         except requests.RequestException as e:
@@ -103,13 +140,14 @@ def main():
             continue
 
     # --- Step 4: Save the final data ---
+    with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
+        json.dump(all_models_data, f, indent=2)
+    save_state(processed_urls)
+
     if all_models_data:
-        filename = "huggingface_data.json"
-        with open(filename, "w") as f:
-            json.dump(all_models_data, f, indent=2)
-        print(f"\n✅ All data successfully saved to {filename}")
+        print(f"\n✅ Incremental data successfully saved to {OUTPUT_FILE}")
     else:
-        print("\n❌ No data was collected.")
+        print(f"\nNo new data was collected. Wrote empty incremental output to {OUTPUT_FILE}.")
 
 if __name__ == "__main__":
     main()

@@ -1,12 +1,10 @@
 import subprocess
 import json
 import os
-import time
 from urllib.parse import urlparse
 import whois
 from datetime import datetime
-import random
-from pymongo import MongoClient, UpdateOne
+from pymongo import MongoClient, InsertOne
 from dotenv import load_dotenv
 
 # # --- Helper Functions ---
@@ -67,6 +65,17 @@ def run_script(script_path):
     except subprocess.CalledProcessError as e:
         print(f"❌ Error running {script_name}: {e}")
         return False
+
+
+def dedupe_by_id(tools):
+    deduped = {}
+    for tool in tools:
+        tool_id = tool.get("id")
+        if not tool_id:
+            continue
+        if tool_id not in deduped:
+            deduped[tool_id] = tool
+    return list(deduped.values())
 
 
 
@@ -198,7 +207,7 @@ def main():
         run_script(s)
 
     # 4. DATA COMBINATION LOGIC
-    # Look for the JSON files in their respective folders
+    # Each scraper writes only newly discovered tools for this run.
     all_tools = []
     json_paths = [
         os.path.join(BASE_DIR, "scraping", "FuturePedia", "futurepedia_data.json"),
@@ -208,7 +217,7 @@ def main():
 
     for path in json_paths:
         if os.path.exists(path):
-            with open(path, 'r') as f:
+            with open(path, 'r', encoding='utf-8') as f:
                 data = json.load(f)
                 all_tools.extend(data)
                 print(f"📦 Loaded {len(data)} tools from {os.path.basename(path)}")
@@ -227,18 +236,29 @@ def main():
         client = MongoClient(mongo_uri)
         db = client.GenAI_DB
         collection = db.tools
-        
-        # Use bulk operations for efficiency
-        from pymongo import UpdateOne
-        operations = [
-            UpdateOne({"id": t["id"]}, {"$set": t}, upsert=True)
-            for t in all_tools if "id" in t
-        ]
-        
-        if operations:
-            result = collection.bulk_write(operations)
-            print(f"✅ Database Update: {result.upserted_count} new, {result.modified_count} updated.")
-        
+
+        deduped_tools = dedupe_by_id(all_tools)
+        if not deduped_tools:
+            print("⚠️ No valid tool IDs found in incremental scraper output.")
+            return
+
+        candidate_ids = [tool["id"] for tool in deduped_tools]
+        existing_ids = set(collection.distinct("id", {"id": {"$in": candidate_ids}}))
+        new_tools = [tool for tool in deduped_tools if tool["id"] not in existing_ids]
+
+        print(
+            f"🔎 Incremental DB filter: {len(deduped_tools)} candidates, "
+            f"{len(existing_ids)} already in DB, {len(new_tools)} new."
+        )
+
+        if not new_tools:
+            print("✅ No new tools to insert today. Database unchanged.")
+            return
+
+        operations = [InsertOne(tool) for tool in new_tools]
+        result = collection.bulk_write(operations)
+        print(f"✅ Database Insert: {result.inserted_count} new tools added.")
+
     except Exception as e:
         print(f"❌ MongoDB Error: {e}")
 

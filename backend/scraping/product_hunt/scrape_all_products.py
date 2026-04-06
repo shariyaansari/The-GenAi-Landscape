@@ -118,6 +118,35 @@ from dotenv import load_dotenv
 # Load credentials
 load_dotenv()
 API_TOKEN = os.getenv("PRODUCT_HUNT_API_TOKEN")
+STATE_FILE = "product_hunt_scrape_state.json"
+OUTPUT_FILE = "product_hunt_data.json"
+
+
+def load_state():
+    default_state = {"processed_ids": [], "last_run": None}
+    if not os.path.exists(STATE_FILE):
+        return default_state
+    try:
+        with open(STATE_FILE, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        processed_ids = data.get("processed_ids", [])
+        if not isinstance(processed_ids, list):
+            processed_ids = []
+        return {
+            "processed_ids": processed_ids,
+            "last_run": data.get("last_run")
+        }
+    except (OSError, json.JSONDecodeError):
+        return default_state
+
+
+def save_state(processed_ids):
+    state = {
+        "processed_ids": sorted(processed_ids),
+        "last_run": datetime.now().strftime("%Y-%m-%d")
+    }
+    with open(STATE_FILE, "w", encoding="utf-8") as f:
+        json.dump(state, f, indent=2)
 
 def generate_tool_id(name):
     if not name: return None
@@ -126,14 +155,16 @@ def generate_tool_id(name):
     s = re.sub(r'[^\w\-]', '', s)
     return s
 
-def fetch_product_hunt_tools(limit=100):
+def fetch_product_hunt_tools(limit=100, seen_ids=None):
     """
     Uses GraphQL to fetch AI tools in bulk. 
     Much faster and more reliable than Selenium.
     """
     if not API_TOKEN:
-        print("❌ Error: PRODUCT_HUNT_TOKEN not found in environment.")
+        print("❌ Error: PRODUCT_HUNT_API_TOKEN not found in environment.")
         return []
+
+    seen_ids = seen_ids or set()
 
     url = "https://api.producthunt.com/v2/api/graphql"
     headers = {
@@ -171,22 +202,35 @@ def fetch_product_hunt_tools(limit=100):
     #   }
     # }
     # """
-    
+
     query = """
     query getAiTools($limit: Int) {
-    posts(first: $limit, topic: "artificial-intelligence", order: NEWEST) {
-    edges {
-      node {
-        name
-        tagline
-        url
-        votesCount
-        website
-        createdAt
-      }
+        posts(first: $limit, topic: "artificial-intelligence", order: NEWEST) {
+            edges {
+                node {
+                    name
+                    tagline
+                    description
+                    url
+                    votesCount
+                    reviewsCount
+                    reviewsRating
+                    website
+                    topics {
+                        edges {
+                            node {
+                                name
+                            }
+                        }
+                    }
+                    thumbnail {
+                        url
+                    }
+                    createdAt
+                }
+            }
+        }
     }
-  }
-}
     """
     
     variables = {"limit": limit}
@@ -207,10 +251,17 @@ def fetch_product_hunt_tools(limit=100):
         for edge in posts:
             node = edge['node']
             name = node.get('name')
+            tool_id = generate_tool_id(name)
+
+            # The feed is ordered by NEWEST, so once we hit a known ID,
+            # the remainder should already be stored.
+            if tool_id and tool_id in seen_ids:
+                print(f"Reached known Product Hunt item '{tool_id}'. Stopping incremental fetch.")
+                break
             
             # Map API response to our project's Tool schema
             tool_data = {
-                "id": generate_tool_id(name),
+                "id": tool_id,
                 "name": name,
                 "description": node.get('description') or node.get('tagline'),
                 "website": node.get('website') or node.get('url'),
@@ -233,7 +284,8 @@ def fetch_product_hunt_tools(limit=100):
                 "pros": [],
                 "cons": []
             }
-            processed_tools.append(tool_data)
+            if tool_id:
+                processed_tools.append(tool_data)
 
         print(f"✅ Successfully processed {len(processed_tools)} tools.")
         return processed_tools
@@ -243,13 +295,20 @@ def fetch_product_hunt_tools(limit=100):
         return []
 
 def main():
-    tools = fetch_product_hunt_tools(limit=100) # You can increase this limit
+    state = load_state()
+    seen_ids = set(state.get("processed_ids", []))
+    tools = fetch_product_hunt_tools(limit=100, seen_ids=seen_ids)  # Increase limit if needed
+
+    with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
+        json.dump(tools, f, indent=2)
+
+    new_ids = {tool["id"] for tool in tools if tool.get("id")}
+    save_state(seen_ids.union(new_ids))
     
     if tools:
-        output_file = "product_hunt_data.json"
-        with open(output_file, "w") as f:
-            json.dump(tools, f, indent=2)
-        print(f"📂 Data saved to {output_file}")
+        print(f"📂 Incremental Product Hunt data saved to {OUTPUT_FILE}")
+    else:
+        print(f"No new Product Hunt tools found. Wrote empty incremental output to {OUTPUT_FILE}")
 
 if __name__ == "__main__": 
     main()

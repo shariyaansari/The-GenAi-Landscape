@@ -4,6 +4,7 @@ import random
 from datetime import datetime
 import json
 import pprint
+import os
 
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
@@ -13,6 +14,36 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 from bs4 import BeautifulSoup
+
+STATE_FILE = "futurepedia_scrape_state.json"
+OUTPUT_FILE = "futurepedia_data.json"
+
+
+def load_state():
+    default_state = {"processed_urls": [], "last_run": None}
+    if not os.path.exists(STATE_FILE):
+        return default_state
+    try:
+        with open(STATE_FILE, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        processed_urls = data.get("processed_urls", [])
+        if not isinstance(processed_urls, list):
+            processed_urls = []
+        return {
+            "processed_urls": processed_urls,
+            "last_run": data.get("last_run")
+        }
+    except (OSError, json.JSONDecodeError):
+        return default_state
+
+
+def save_state(processed_urls):
+    state = {
+        "processed_urls": sorted(processed_urls),
+        "last_run": datetime.now().strftime("%Y-%m-%d")
+    }
+    with open(STATE_FILE, "w", encoding="utf-8") as f:
+        json.dump(state, f, indent=2)
 
 # --- All helper functions are finalized ---
 def generate_tool_id(name):
@@ -90,6 +121,17 @@ def main():
         print("Error: futurepedia_urls.txt not found. Make sure it's in the same folder.")
         return
 
+    state = load_state()
+    processed_urls = set(state.get("processed_urls", []))
+
+    # Only scrape URLs we have never processed before
+    urls_to_scrape = [url for url in urls_to_scrape if url and url not in processed_urls]
+    if not urls_to_scrape:
+        with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
+            json.dump([], f, indent=2)
+        print("No new FuturePedia URLs to scrape today.")
+        return
+
     # Initialize Selenium WebDriver outside the loop
     print("Initializing Selenium WebDriver...")
     options = webdriver.ChromeOptions()
@@ -151,6 +193,7 @@ def main():
             tool_data['trendScore'] = random.randint(70, 95)
             
             all_tools_data.append(tool_data)
+            processed_urls.add(url)
             
             # A small delay is still good practice
             time.sleep(0.5) 
@@ -165,13 +208,14 @@ def main():
     print(f"Scraping complete! Successfully gathered data for {len(all_tools_data)} out of {total_urls} tools.")
 
     # Save the final data to JSON
+    with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
+        json.dump(all_tools_data, f, indent=2)
+    save_state(processed_urls)
+
     if all_tools_data:
-        json_filename = "frontend_ready_tools.json"
-        with open(json_filename, "w") as f:
-            json.dump(all_tools_data, f, indent=2)
-        print(f"✅ All data successfully saved to {json_filename}")
+        print(f"✅ Incremental data saved to {OUTPUT_FILE}")
     else:
-        print("No data was collected. No file was saved.")
+        print(f"No new tools were collected. Wrote empty incremental output to {OUTPUT_FILE}.")
 
 if __name__ == "__main__":
     main()
