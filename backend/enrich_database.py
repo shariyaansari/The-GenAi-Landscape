@@ -29,7 +29,6 @@ def enrich_data_with_embeddings():
 
     # --- 2. Load the Embedding Model ---
     # This model is small, fast, and effective for semantic search.
-    # The first time you run this, it will download the model (a few hundred MB).
     print("Loading sentence-transformer model (this may take a moment)...")
     model = SentenceTransformer('all-MiniLM-L6-v2')
     print("✅ Model loaded successfully.")
@@ -72,7 +71,7 @@ if __name__ == "__main__":
 
 ### Step 3: Create a Vector Search Index in MongoDB Atlas
 
-# This is a crucial step that you must do **manually** in your MongoDB Atlas dashboard. This index is what makes the similarity search incredibly fast.
+# This is a crucial step that takes place in your MongoDB Atlas dashboard. This index is what makes the similarity search incredibly fast.
 
 # 1.  **Go to your Cluster:** Open your project in MongoDB Atlas and navigate to your database cluster.
 # 2.  **Find the "Search" Tab:** Click on the "Search" tab.

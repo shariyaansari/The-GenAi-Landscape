@@ -162,7 +162,7 @@ from fastapi import HTTPException
 from fastapi.responses import JSONResponse
 
 @app.get("/api/tools")
-def get_all_tools():
+def get_all_tools(skip: int = 0, limit: int = 50):
     if tools_collection is None:
         print("❌ tools_collection is None")
         raise HTTPException(status_code=500, detail="Database connection not configured.")
@@ -190,10 +190,10 @@ def get_all_tools():
             for tool in raw_tools
         ]
 
-        return JSONResponse(content=tools)
+        return list(tools_collection.find().skip(skip).limit(limit))
 
     except Exception as e:
-        print("❌ Error in /api/tools:", repr(e))
+        print(" Error in /api/tools:", repr(e))
         raise HTTPException(status_code=500, detail="Internal Server Error")
 
 @app.get("/api/tools/{tool_id}")
